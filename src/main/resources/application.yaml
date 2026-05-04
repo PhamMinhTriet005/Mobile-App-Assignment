@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: SEdu
+      
+  # Added so DataSeeder doesn't block startup if MongoDB is booting slowly
+  main:
+    lazy-initialization: true
