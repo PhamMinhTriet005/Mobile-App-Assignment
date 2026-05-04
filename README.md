@@ -6,51 +6,35 @@ A mobile application designed for seniors to learn foreign languages with vocabu
 
 | Layer | Technology |
 |-------|------------|
-| Mobile | React Native (Expo) |
+| Frontend | React Native (Expo) |
 | Backend | Java Spring Boot |
 | Database | MongoDB |
-
-## Architecture
-
-```
-view → service → controller → database
-```
-
-- **Presentation Layer**: React Native screens & components
-- **Business Layer**: Services/hooks with business logic
-- **Persistence Layer**: REST controllers handling requests/responses
-- **Database Layer**: MongoDB models & repositories
 
 ## Project Structure
 
 ```
-senior-lang-app/
-├── mobile/                    # React Native frontend
-│   └── src/
-│       ├── features/         # Feature-based modules
-│       │   ├── auth/        # Login, register, guest mode
-│       │   ├── vocabulary/ # Vocab display, audio, examples
-│       │   ├── quiz/       # Quiz system (choice/listen/speak)
-│       │   ├── speaking/   # Recording, speech-to-text
-│       │   └── progress/   # Progress tracking
-│       ├── core/           # Shared: API client, auth context
-│       ├── components/     # Reusable UI components
-│       ├── navigation/    # React Navigation
-│       ├── theme/         # Colors, typography, spacing
-│       └── types/         # TypeScript interfaces
+S-Edu/
+├── mobile/                    # React Native frontend (Expo)
+│   ├── src/
+│   │   ├── App.tsx          # Main app component
+│   │   ├── components/     # Reusable UI components
+│   │   ├── screens/        # App screens
+│   │   ├── services/       # API client & services
+│   │   └── navigation/    # Navigation config
+│   ├── package.json
+│   ├── app.json
+│   └── babel.config.js
 │
-├── backend/                # Spring Boot API
-│   └── src/main/java/com/seniorlang/
-│       ├── controller/   # REST APIs
-│       ├── service/     # Business logic
-│       ├── model/       # MongoDB documents
-│       ├── repository/ # Data access
-│       ├── dto/        # Request/Response objects
-│       ├── config/     # Security, MongoDB config
-│       ├── security/   # JWT, password encoding
-│       └── exception/ # Custom exceptions
+├── backend/                  # Spring Boot API
+│   ├── src/
+│   │   ├── main/java/      # Java source code
+│   │   └── test/java/      # Test files
+│   ├── pom.xml
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+│   └── mvnw
 │
-└── docs/                  # Documentation
+└── README.md
 ```
 
 ## Features
@@ -81,7 +65,7 @@ senior-lang-app/
 - Learning history (vocabulary)
 - Progress analytics
 
-## API Endpoints (Draft)
+## API Endpoints
 
 ### Auth
 - `POST /api/auth/register` - User registration
@@ -116,7 +100,7 @@ cd backend
 ./mvnw spring-boot:run
 ```
 
-### Mobile Setup
+### Frontend Setup
 ```bash
 cd mobile
 npm install
