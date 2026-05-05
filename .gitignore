@@ -9,6 +9,7 @@
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
+backend-logs.txt
 
 # Frontend (React Native/Expo)
 mobile/node_modules/
