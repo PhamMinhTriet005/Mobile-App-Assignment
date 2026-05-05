@@ -1,7 +1,37 @@
-spring:
+﻿spring:
   application:
     name: SEdu
-      
-  # Added so DataSeeder doesn't block startup if MongoDB is booting slowly
   main:
-    lazy-initialization: true
+    lazy-initialization: false
+  data:
+    mongodb:
+      uri: mongodb://mongodb:27017/SEdu_db
+      host: mongodb
+      port: 27017
+      database: SEdu_db
+      auto-index-creation: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    url-primary: true
+    display-request-duration: true
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.mobiledev.SEdu: DEBUG
+    org.springframework.data.mongodb: DEBUG
+    org.springframework.web: INFO
