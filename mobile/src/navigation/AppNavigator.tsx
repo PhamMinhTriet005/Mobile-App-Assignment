@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Text, StyleSheet, View } from 'react-native';
 import { HomeScreen } from '../screens/HomeScreen';
 import { TopicsScreen } from '../screens/TopicsScreen';
@@ -9,6 +10,22 @@ import { QuizScreen } from '../screens/QuizScreen';
 import { colors } from '../theme';
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+const LearnStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Topics" component={TopicsScreen} />
+      <Stack.Screen name="Vocabulary" component={VocabularyScreen} />
+      <Stack.Screen name="Quiz" component={QuizScreen} />
+    </Stack.Navigator>
+  );
+};
 
 const TabIcon = ({ icon, focused }: { icon: string; focused: boolean }) => (
   <View style={styles.tabIcon}>
@@ -29,8 +46,8 @@ export const AppNavigator: React.FC = () => {
         }}
       >
         <Tab.Screen
-          name="Home"
-          component={HomeScreen}
+          name="Learn"
+          component={LearnStack}
           options={{
             tabBarLabel: 'Learn',
             tabBarIcon: ({ focused }) => <TabIcon icon="📚" focused={focused} />,

@@ -5,8 +5,8 @@
     lazy-initialization: false
   data:
     mongodb:
-      uri: mongodb://mongodb:27017/SEdu_db
-      host: mongodb
+      uri: mongodb://localhost:27017/SEdu_db
+      host: localhost
       port: 27017
       database: SEdu_db
       auto-index-creation: true
