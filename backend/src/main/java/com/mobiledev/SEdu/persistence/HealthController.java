@@ -1,4 +1,4 @@
-package com.mobiledev.SEdu.presentation; // Or .controller depending on your structure
+package com.mobiledev.SEdu.persistence; // Or .controller depending on your structure
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

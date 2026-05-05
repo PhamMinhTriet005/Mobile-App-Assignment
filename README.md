@@ -65,28 +65,6 @@ S-Edu/
 - Learning history (vocabulary)
 - Progress analytics
 
-## API Endpoints
-
-### Auth
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `POST /api/auth/guest` - Guest access
-
-### Vocabulary
-- `GET /api/vocabulary` - List vocabulary
-- `GET /api/vocabulary/{id}` - Get vocabulary detail
-- `GET /api/vocabulary/{id}/audio` - Get audio pronunciation
-
-### Quiz
-- `GET /api/quiz` - List quizzes
-- `POST /api/quiz/{id}/submit` - Submit quiz answers
-- `GET /api/quiz/{id}/result` - Get quiz result
-
-### Progress
-- `GET /api/progress` - Get user progress
-- `POST /api/progress` - Update progress
-- `GET /api/progress/history` - Learning history
-
 ## Getting Started
 
 ### Prerequisites
@@ -109,4 +87,11 @@ npx expo start
 
 ## License
 
-MIT
+The MIT License (MIT)
+Copyright © 2026 Pham Minh Triet, Nguyen Huu Thien, Tran Trong Tin
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
