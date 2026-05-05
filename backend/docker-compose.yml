@@ -17,6 +17,8 @@ services:
       - "8080:8080" # Map local port 8080 to container port 8080
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/SEdu_db
+      - SPRING_DATA_MONGODB_HOST=mongodb
+      - SPRING_DATA_MONGODB_PORT=27017
     depends_on:
       - mongodb # Ensure MongoDB starts before the backend
     restart: unless-stopped
