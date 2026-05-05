@@ -82,6 +82,34 @@ docker-compose down
 
 ---
 
+### Option 2: Local Development
+
+#### 1. Start MongoDB Locally
+```bash
+# Make sure MongoDB is installed and running locally
+mongod --dbpath ./data --port 27017
+```
+
+#### 2. Update Configuration
+Ensure `src/main/resources/application.yaml` points to your local MongoDB:
+```yaml
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/SEdu_db
+```
+
+#### 3. Build and Run
+```bash
+# Maven clean build
+mvn clean package -DskipTests
+
+# Run the application
+mvn spring-boot:run
+```
+
+---
+
 ## 📡 API Documentation
 
 ### Interactive Swagger UI
@@ -174,10 +202,6 @@ The backend intelligently detects if the database is empty upon startup via the 
 ### Error Handling
 All application and routing errors are intercepted by `GlobalExceptionHandler`, resolving custom exceptions (e.g., `ResourceNotFoundException`) and runtime errors cleanly into the standardized `ApiResponse<T>` HTTP layout.
 
----
-
-## 📄 License
-This project is part of the S-Edu mobile application.
 
 ---
 
