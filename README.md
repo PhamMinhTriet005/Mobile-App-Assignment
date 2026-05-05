@@ -65,28 +65,6 @@ S-Edu/
 - Learning history (vocabulary)
 - Progress analytics
 
-## API Endpoints
-
-### Auth
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `POST /api/auth/guest` - Guest access
-
-### Vocabulary
-- `GET /api/vocabulary` - List vocabulary
-- `GET /api/vocabulary/{id}` - Get vocabulary detail
-- `GET /api/vocabulary/{id}/audio` - Get audio pronunciation
-
-### Quiz
-- `GET /api/quiz` - List quizzes
-- `POST /api/quiz/{id}/submit` - Submit quiz answers
-- `GET /api/quiz/{id}/result` - Get quiz result
-
-### Progress
-- `GET /api/progress` - Get user progress
-- `POST /api/progress` - Update progress
-- `GET /api/progress/history` - Learning history
-
 ## Getting Started
 
 ### Prerequisites
