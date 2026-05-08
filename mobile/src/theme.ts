@@ -1,18 +1,21 @@
 export const colors = {
-  primary: '#007AFF',
-  primaryDark: '#0056B3',
-  secondary: '#34C759',
-  secondaryDark: '#248A3D',
-  background: '#F2F2F7',
+  primary: '#0052CC',
+  primaryDark: '#003D9B',
+  secondary: '#006D35',
+  secondaryDark: '#005226',
+  background: '#F9F9FF',
   surface: '#FFFFFF',
-  text: '#000000',
-  textSecondary: '#3C3C43',
-  textTertiary: '#8E8E93',
-  border: '#C6C6C8',
-  error: '#FF3B30',
-  success: '#34C759',
-  warning: '#FF9500',
-  disabled: '#E5E5EA',
+  surfaceLow: '#F0F3FF',
+  surfaceHigh: '#E1E8FA',
+  surfaceMuted: '#E7EEFF',
+  text: '#141C28',
+  textSecondary: '#434654',
+  textTertiary: '#737685',
+  border: '#C3C6D6',
+  error: '#BA1A1A',
+  success: '#006D35',
+  warning: '#D93D00',
+  disabled: '#D2DAEB',
 };
 
 export const darkColors = {
@@ -22,6 +25,9 @@ export const darkColors = {
   secondaryDark: '#34C759',
   background: '#000000',
   surface: '#1C1C1E',
+  surfaceLow: '#2C2C2E',
+  surfaceHigh: '#3A3A3C',
+  surfaceMuted: '#2C2C2E',
   text: '#FFFFFF',
   textSecondary: '#EBEBF5',
   textTertiary: '#8E8E93',
@@ -39,42 +45,87 @@ export const spacing = {
   lg: 24,
   xl: 32,
   '2xl': 48,
+  '3xl': 64,
 };
 
 export const typography = {
   largeTitle: {
-    fontSize: 34,
+    fontFamily: 'PublicSans_700Bold',
+    fontSize: 32,
     fontWeight: '700' as const,
-    lineHeight: 41,
+    lineHeight: 44,
   },
   title: {
-    fontSize: 22,
-    fontWeight: '700' as const,
-    lineHeight: 28,
+    fontFamily: 'PublicSans_600SemiBold',
+    fontSize: 24,
+    fontWeight: '600' as const,
+    lineHeight: 32,
   },
   headline: {
-    fontSize: 17,
+    fontFamily: 'Lexend_600SemiBold',
+    fontSize: 20,
     fontWeight: '600' as const,
-    lineHeight: 22,
+    lineHeight: 28,
   },
   body: {
-    fontSize: 17,
+    fontFamily: 'Lexend_400Regular',
+    fontSize: 18,
     fontWeight: '400' as const,
-    lineHeight: 22,
+    lineHeight: 30,
   },
   callout: {
+    fontFamily: 'Lexend_400Regular',
     fontSize: 16,
     fontWeight: '400' as const,
-    lineHeight: 21,
+    lineHeight: 24,
   },
   caption: {
+    fontFamily: 'Lexend_400Regular',
     fontSize: 12,
     fontWeight: '400' as const,
     lineHeight: 16,
   },
+  label: {
+    fontFamily: 'Lexend_600SemiBold',
+    fontSize: 20,
+    fontWeight: '600' as const,
+    lineHeight: 28,
+  },
+  button: {
+    fontFamily: 'Lexend_600SemiBold',
+    fontSize: 20,
+    fontWeight: '600' as const,
+    lineHeight: 24,
+    letterSpacing: 0.4,
+  },
 };
 
 export const touchable = {
-  minHeight: 44,
-  minWidth: 44,
+  minHeight: 56,
+  minWidth: 56,
+};
+
+export const radius = {
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 24,
+  full: 9999,
+};
+
+export const shadow = {
+  card: {
+    shadowColor: '#141C28',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.12,
+    shadowRadius: 24,
+    elevation: 4,
+  },
+  lift: {
+    shadowColor: '#141C28',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.1,
+    shadowRadius: 18,
+    elevation: 3,
+  },
 };

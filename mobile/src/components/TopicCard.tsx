@@ -1,17 +1,18 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { colors, spacing, typography, touchable } from '../theme';
+import { colors, spacing, typography, touchable, radius, shadow } from '../theme';
 import { Topic } from '../services/api';
 
 interface TopicCardProps {
   topic: Topic;
   onPress: () => void;
   index: number;
+  wordCount?: number;
 }
 
 const topicIcons: string[] = ['👨‍👩‍👧', '🐾', '🏞️', '🍎', '🎨', '🎵', '🏠', '🚗'];
 
-export const TopicCard: React.FC<TopicCardProps> = ({ topic, onPress, index }) => {
+export const TopicCard: React.FC<TopicCardProps> = ({ topic, onPress, index, wordCount }) => {
   const icon = topicIcons[index % topicIcons.length];
 
   return (
@@ -25,9 +26,14 @@ export const TopicCard: React.FC<TopicCardProps> = ({ topic, onPress, index }) =
       <Text style={styles.icon}>{icon}</Text>
       <View style={styles.content}>
         <Text style={styles.name}>{topic.name}</Text>
-        <Text style={styles.subtitle}>Tap to view vocabulary</Text>
+        <Text style={styles.subtitle}>
+          {typeof wordCount === 'number' ? `${wordCount} words to learn` : 'Tap to view vocabulary'}
+        </Text>
       </View>
-      <Text style={styles.chevron}>›</Text>
+      <View style={styles.startButton}>
+        <Text style={styles.startText}>Start</Text>
+        <Text style={styles.startIcon}>→</Text>
+      </View>
     </Pressable>
   );
 };
@@ -36,22 +42,18 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: 16,
+    backgroundColor: colors.surfaceLow,
+    borderRadius: radius.xl,
     padding: spacing.lg,
-    minHeight: touchable.minHeight + 12,
+    minHeight: 72,
     marginBottom: spacing.md,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 2,
+    ...shadow.lift,
   },
   pressed: {
     opacity: 0.9,
   },
   icon: {
-    fontSize: 32,
+    fontSize: 30,
     marginRight: spacing.md,
   },
   content: {
@@ -63,12 +65,26 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     ...typography.caption,
-    color: colors.textTertiary,
+    color: colors.textSecondary,
     marginTop: spacing.xs,
   },
-  chevron: {
-    fontSize: 28,
-    color: colors.textTertiary,
-    fontWeight: '300',
+  startButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.primary,
+    borderRadius: radius.full,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    gap: spacing.xs,
+  },
+  startText: {
+    ...typography.button,
+    fontSize: 14,
+    lineHeight: 18,
+    color: colors.surface,
+  },
+  startIcon: {
+    fontSize: 14,
+    color: colors.surface,
   },
 });

@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { colors, spacing, typography, touchable } from '../theme';
+import { colors, spacing, typography, touchable, radius, shadow } from '../theme';
 import { Language } from '../services/api';
-import { Card } from './Card';
 
 interface LanguageCardProps {
   language: Language;
@@ -45,23 +44,19 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderRadius: 16,
+    backgroundColor: colors.surfaceLow,
+    borderRadius: radius.xl,
     padding: spacing.lg,
-    minHeight: touchable.minHeight + 20,
+    minHeight: 72,
     marginBottom: spacing.md,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 2,
+    ...shadow.lift,
   },
   pressed: {
     opacity: 0.9,
     transform: [{ scale: 0.98 }],
   },
   flag: {
-    fontSize: 40,
+    fontSize: 36,
     marginRight: spacing.md,
   },
   content: {
@@ -77,7 +72,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.xs,
   },
   chevron: {
-    fontSize: 28,
+    fontSize: 26,
     color: colors.textTertiary,
     fontWeight: '300',
   },

@@ -3,7 +3,7 @@ import { View, Text, FlatList, StyleSheet, ActivityIndicator, RefreshControl, Pr
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { api, Vocabulary, Topic, Language } from '../services/api';
-import { colors, spacing, typography, touchable } from '../theme';
+import { colors, spacing, typography, touchable, radius, shadow } from '../theme';
 import { VocabularyCard } from '../components/VocabularyCard';
 import { Button } from '../components/Button';
 
@@ -59,27 +59,38 @@ export const VocabularyScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.header}>
-        <Pressable
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-          accessible={true}
-          accessibilityRole="button"
-          accessibilityLabel="Go back"
-        >
-          <Text style={styles.backText}>‹ Topics</Text>
-        </Pressable>
-        <Text style={styles.topicName}>{topic.name}</Text>
-        <Text style={styles.subtitle}>
-          {vocabularies.length} words to learn
-        </Text>
-      </View>
       <FlatList
         data={vocabularies}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
+          <View style={styles.header}>
+            <Pressable
+              onPress={() => navigation.goBack()}
+              style={styles.backButton}
+              accessible={true}
+              accessibilityRole="button"
+              accessibilityLabel="Go back"
+            >
+              <Text style={styles.backText}>‹ Topics</Text>
+            </Pressable>
+            <Text style={styles.topicName}>{topic.name}</Text>
+            <Text style={styles.subtitle}>{vocabularies.length} words to learn</Text>
+            {vocabularies.length > 0 && (
+              <View style={styles.lessonCard}>
+                <Text style={styles.lessonLabel}>Lesson preview</Text>
+                <Text style={styles.lessonTitle}>{vocabularies[0].word}</Text>
+                <Text style={styles.lessonCaption}>{vocabularies[0].meaning}</Text>
+                <View style={styles.lessonBadge}>
+                  <Text style={styles.lessonBadgeText}>{vocabularies[0].type}</Text>
+                </View>
+              </View>
+            )}
+            <Text style={styles.sectionTitle}>Vocabulary list</Text>
+          </View>
+        }
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.primary]} />
         }
@@ -109,7 +120,7 @@ const styles = StyleSheet.create({
   backText: {
     fontSize: 18,
     color: colors.primary,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   topicName: {
     ...typography.largeTitle,
@@ -119,6 +130,48 @@ const styles = StyleSheet.create({
     ...typography.body,
     color: colors.textSecondary,
     marginTop: spacing.xs,
+    marginBottom: spacing.md,
+  },
+  lessonCard: {
+    backgroundColor: colors.surfaceHigh,
+    borderRadius: radius.xl,
+    padding: spacing.lg,
+    marginBottom: spacing.lg,
+    ...shadow.lift,
+  },
+  lessonLabel: {
+    ...typography.caption,
+    color: colors.textTertiary,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
+  lessonTitle: {
+    ...typography.title,
+    color: colors.text,
+    marginTop: spacing.sm,
+  },
+  lessonCaption: {
+    ...typography.body,
+    color: colors.textSecondary,
+    marginTop: spacing.sm,
+  },
+  lessonBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: colors.primary + '20',
+    borderRadius: radius.full,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    marginTop: spacing.md,
+  },
+  lessonBadgeText: {
+    ...typography.caption,
+    color: colors.primary,
+    fontWeight: '600',
+  },
+  sectionTitle: {
+    ...typography.headline,
+    color: colors.text,
+    marginBottom: spacing.sm,
   },
   list: {
     paddingHorizontal: spacing.lg,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
-import { colors, spacing, typography } from '../theme';
+import { colors, spacing, typography, radius, shadow } from '../theme';
 import { Vocabulary } from '../services/api';
 import { Card } from './Card';
 
@@ -26,15 +26,11 @@ export const VocabularyCard: React.FC<VocabularyCardProps> = ({ vocabulary, inde
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.surface,
-    borderRadius: 16,
+    backgroundColor: colors.surfaceLow,
+    borderRadius: radius.xl,
     padding: spacing.lg,
     marginBottom: spacing.md,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 2,
+    ...shadow.lift,
   },
   header: {
     flexDirection: 'row',
@@ -52,7 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary + '20',
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
-    borderRadius: 8,
+    borderRadius: radius.md,
   },
   badgeText: {
     ...typography.caption,

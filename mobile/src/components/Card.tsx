@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Pressable, StyleSheet, Platform } from 'react-native';
-import { colors, spacing } from '../theme';
+import { colors, spacing, radius, shadow } from '../theme';
 
 interface CardProps {
   children: React.ReactNode;
@@ -32,18 +32,11 @@ export const Card: React.FC<CardProps> = ({ children, onPress, style }) => {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
-    borderRadius: 16,
-    padding: spacing.md,
+    borderRadius: radius.xl,
+    padding: spacing.lg,
     ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-      },
-      android: {
-        elevation: 3,
-      },
+      ios: shadow.card,
+      android: shadow.card,
     }),
   },
   pressed: {

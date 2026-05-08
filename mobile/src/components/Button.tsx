@@ -1,14 +1,16 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
-import { colors, spacing, typography, touchable } from '../theme';
+import { colors, spacing, typography, touchable, radius, shadow } from '../theme';
 
 interface ButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'outline';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
   disabled?: boolean;
   loading?: boolean;
   size?: 'large' | 'medium';
+  icon?: string;
+  iconPosition?: 'left' | 'right';
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -18,13 +20,17 @@ export const Button: React.FC<ButtonProps> = ({
   disabled = false,
   loading = false,
   size = 'large',
+  icon,
+  iconPosition = 'right',
 }) => {
   const getButtonStyle = () => {
     const base = [styles.button, styles[`${size}Button`]];
     if (variant === 'primary') base.push(styles.primaryButton);
     if (variant === 'secondary') base.push(styles.secondaryButton);
     if (variant === 'outline') base.push(styles.outlineButton);
+    if (variant === 'ghost') base.push(styles.ghostButton);
     if (disabled) base.push(styles.disabled);
+    if (variant === 'primary' && !disabled) base.push(styles.primaryShadow);
     return base;
   };
 
@@ -33,6 +39,7 @@ export const Button: React.FC<ButtonProps> = ({
     if (variant === 'primary') base.push(styles.primaryText);
     if (variant === 'secondary') base.push(styles.secondaryText);
     if (variant === 'outline') base.push(styles.outlineText);
+    if (variant === 'ghost') base.push(styles.ghostText);
     if (disabled) base.push(styles.disabledText);
     return base;
   };
@@ -53,7 +60,15 @@ export const Button: React.FC<ButtonProps> = ({
       {loading ? (
         <ActivityIndicator color={variant === 'primary' ? '#FFFFFF' : colors.primary} />
       ) : (
-        <Text style={getTextStyle()}>{title}</Text>
+        <View style={styles.content}>
+          {icon && iconPosition === 'left' ? (
+            <Text style={[styles.icon, getTextStyle()]}>{icon}</Text>
+          ) : null}
+          <Text style={getTextStyle()}>{title}</Text>
+          {icon && iconPosition === 'right' ? (
+            <Text style={[styles.icon, getTextStyle()]}>{icon}</Text>
+          ) : null}
+        </View>
       )}
     </Pressable>
   );
@@ -64,7 +79,7 @@ const styles = StyleSheet.create({
     minHeight: touchable.minHeight,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
-    borderRadius: 12,
+    borderRadius: radius.xl,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -73,19 +88,25 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.lg,
   },
   mediumButton: {
-    minHeight: 44,
+    minHeight: touchable.minHeight,
     paddingVertical: spacing.md,
   },
   primaryButton: {
     backgroundColor: colors.primary,
+  },
+  primaryShadow: {
+    ...shadow.lift,
   },
   secondaryButton: {
     backgroundColor: colors.secondary,
   },
   outlineButton: {
     backgroundColor: 'transparent',
-    borderWidth: 2,
+    borderWidth: 3,
     borderColor: colors.primary,
+  },
+  ghostButton: {
+    backgroundColor: colors.surfaceLow,
   },
   pressed: {
     opacity: 0.7,
@@ -94,16 +115,16 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   buttonText: {
-    fontWeight: '600',
+    ...typography.button,
     textAlign: 'center',
   },
   largeText: {
-    fontSize: 18,
+    fontSize: 20,
     lineHeight: 24,
   },
   mediumText: {
-    fontSize: 16,
-    lineHeight: 20,
+    fontSize: 18,
+    lineHeight: 24,
   },
   primaryText: {
     color: '#FFFFFF',
@@ -114,7 +135,18 @@ const styles = StyleSheet.create({
   outlineText: {
     color: colors.primary,
   },
+  ghostText: {
+    color: colors.text,
+  },
   disabledText: {
     color: colors.textTertiary,
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  icon: {
+    fontSize: 18,
   },
 });

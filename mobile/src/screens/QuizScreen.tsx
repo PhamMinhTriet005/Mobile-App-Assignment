@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, Pressable, Alert } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, Pressable, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { api, Question, Topic, Language } from '../services/api';
-import { colors, spacing, typography, touchable } from '../theme';
+import { colors, spacing, typography, touchable, radius, shadow } from '../theme';
 import { Button } from '../components/Button';
 
 export const QuizScreen: React.FC = () => {
@@ -124,18 +124,29 @@ export const QuizScreen: React.FC = () => {
           accessibilityRole="button"
           accessibilityLabel="Exit quiz"
         >
-          <Text style={styles.backText}>✕ Exit</Text>
+          <Text style={styles.backText}>← Back</Text>
         </Pressable>
-        <Text style={styles.progress}>
-          Question {currentIndex + 1} of {questions.length}
-        </Text>
+        <Text style={styles.progress}>Step {currentIndex + 1} of {questions.length}</Text>
         <View style={styles.progressBar}>
           <View style={[styles.progressFill, { width: `${progress}%` }]} />
         </View>
       </View>
 
       <View style={styles.questionContainer}>
+        {question.imageUrl ? (
+          <Image source={{ uri: question.imageUrl }} style={styles.questionImage} />
+        ) : null}
+        <Text style={styles.questionTitle}>{topic.name}</Text>
         <Text style={styles.questionText}>{question.content}</Text>
+        <Text style={styles.questionSubtitle}>Which word matches the meaning?</Text>
+        <Button
+          title="Play Audio"
+          onPress={() => {}}
+          variant="ghost"
+          size="medium"
+          icon="🔊"
+          iconPosition="left"
+        />
       </View>
 
       <View style={styles.options}>
@@ -175,10 +186,11 @@ export const QuizScreen: React.FC = () => {
 
       <View style={styles.footer}>
         <Button
-          title={currentIndex < questions.length - 1 ? 'Next' : 'Submit'}
+          title={currentIndex < questions.length - 1 ? 'Next' : 'Finish'}
           onPress={handleNext}
           disabled={selectedIndex === null}
           size="large"
+          icon="→"
         />
       </View>
     </SafeAreaView>
@@ -202,7 +214,7 @@ const styles = StyleSheet.create({
   backText: {
     fontSize: 16,
     color: colors.textSecondary,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   progress: {
     ...typography.body,
@@ -211,25 +223,43 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
   },
   progressBar: {
-    height: 6,
-    backgroundColor: colors.border,
-    borderRadius: 3,
+    height: 16,
+    backgroundColor: colors.surfaceLow,
+    borderRadius: radius.full,
     marginTop: spacing.sm,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    backgroundColor: colors.primary,
-    borderRadius: 3,
+    backgroundColor: colors.secondary,
+    borderRadius: radius.full,
   },
   questionContainer: {
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: spacing.lg,
+    gap: spacing.md,
+  },
+  questionImage: {
+    width: '100%',
+    height: 180,
+    borderRadius: radius.xl,
+    marginBottom: spacing.lg,
+    backgroundColor: colors.surfaceHigh,
+  },
+  questionTitle: {
+    ...typography.headline,
+    color: colors.text,
+    textAlign: 'center',
   },
   questionText: {
     ...typography.title,
     color: colors.text,
+    textAlign: 'center',
+  },
+  questionSubtitle: {
+    ...typography.body,
+    color: colors.textSecondary,
     textAlign: 'center',
   },
   options: {
@@ -237,16 +267,12 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   option: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceLow,
     padding: spacing.lg,
-    borderRadius: 16,
-    minHeight: touchable.minHeight,
+    borderRadius: radius.xl,
+    minHeight: 72,
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
-    elevation: 1,
+    ...shadow.lift,
   },
   optionSelected: {
     backgroundColor: colors.primary,
