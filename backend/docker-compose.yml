@@ -1,14 +1,4 @@
 services:
-  # MongoDB Database Service
-  mongodb:
-    image: mongo:latest
-    container_name: mongodb-sedu
-    ports:
-      - "27017:27017" # Map local port 27017 to container port 27017
-    volumes:
-      - mongodb_data:/data/db # Persist database data even if container stops
-    restart: unless-stopped
-
   # Spring Boot Backend Service
   backend:
     build: .
@@ -16,13 +6,5 @@ services:
     ports:
       - "8080:8080" # Map local port 8080 to container port 8080
     environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/SEdu_db
-      - SPRING_DATA_MONGODB_HOST=mongodb
-      - SPRING_DATA_MONGODB_PORT=27017
-    depends_on:
-      - mongodb # Ensure MongoDB starts before the backend
+      - SPRING_DATA_MONGODB_URI=${SPRING_DATA_MONGODB_URI}
     restart: unless-stopped
-
-# Define the persistent volume for MongoDB
-volumes:
-  mongodb_data:
