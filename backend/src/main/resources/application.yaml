@@ -1,14 +1,11 @@
-﻿spring:
+spring:
   application:
     name: SEdu
   main:
     lazy-initialization: false
   data:
     mongodb:
-      uri: mongodb://mongodb:27017/SEdu_db
-      host: mongodb
-      port: 27017
-      database: SEdu_db
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/SEdu_db}
       auto-index-creation: true
   jpa:
     hibernate:
@@ -35,3 +32,11 @@ logging:
     com.mobiledev.SEdu: DEBUG
     org.springframework.data.mongodb: DEBUG
     org.springframework.web: INFO
+
+app:
+  ai:
+    speech:
+      provider: ${AI_SPEECH_PROVIDER:AZURE}
+    azure:
+      key: ${AZURE_SPEECH_KEY:}
+      region: ${AZURE_SPEECH_REGION:}
