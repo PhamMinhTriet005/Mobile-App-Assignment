@@ -73,10 +73,15 @@ S-Edu/
 - MongoDB
 
 ### Backend Setup
-```bash
-cd backend
-./mvnw spring-boot:run
-```
+1. Configure your environment variables: Create a `.env` file in the `backend` folder with your MongoDB Atlas Cloud URI:
+   ```bash
+   SPRING_DATA_MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/SEdu_db?appName=SeniorEducation
+   ```
+2. Run the server:
+   ```bash
+   cd backend
+   ./mvnw spring-boot:run
+   ```
 
 ### Frontend Setup
 ```bash
