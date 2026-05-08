@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, Pressable, Image } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, Pressable, Image, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { api, Question, Topic, Language } from '../services/api';
@@ -132,57 +132,61 @@ export const QuizScreen: React.FC = () => {
         </View>
       </View>
 
-      <View style={styles.questionContainer}>
-        {question.imageUrl ? (
-          <Image source={{ uri: question.imageUrl }} style={styles.questionImage} />
-        ) : null}
-        <Text style={styles.questionTitle}>{topic.name}</Text>
-        <Text style={styles.questionText}>{question.content}</Text>
-        <Text style={styles.questionSubtitle}>Which word matches the meaning?</Text>
-        <Button
-          title="Play Audio"
-          onPress={() => {}}
-          variant="ghost"
-          size="medium"
-          icon="🔊"
-          iconPosition="left"
-        />
-      </View>
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.questionContainer}>
+          {question.imageUrl ? (
+            <Image source={{ uri: question.imageUrl }} style={styles.questionImage} />
+          ) : null}
+          <Text style={styles.questionTitle}>{topic.name}</Text>
+          <Text style={styles.questionText}>{question.content}</Text>
+          <Text style={styles.questionSubtitle}>Which word matches the meaning?</Text>
+          <View style={styles.audioButton}>
+            <Button
+              title="Play Audio"
+              onPress={() => {}}
+              variant="ghost"
+              size="medium"
+              icon="🔊"
+              iconPosition="left"
+            />
+          </View>
+        </View>
 
-      <View style={styles.options}>
-        {question.options.map((option, index) => {
-          const isSelected = selectedIndex === index;
-          const isCorrect = index === question.correctOptionIndex;
-          const showCorrect = selectedIndex !== null && isCorrect;
-          const showWrong = isSelected && !isCorrect;
+        <View style={styles.options}>
+          {question.options.map((option, index) => {
+            const isSelected = selectedIndex === index;
+            const isCorrect = index === question.correctOptionIndex;
+            const showCorrect = selectedIndex !== null && isCorrect;
+            const showWrong = isSelected && !isCorrect;
 
-          return (
-            <Pressable
-              key={index}
-              onPress={() => handleSelect(index)}
-              disabled={selectedIndex !== null}
-              style={[
-                styles.option,
-                isSelected && styles.optionSelected,
-                showCorrect && styles.optionCorrect,
-                showWrong && styles.optionWrong,
-              ]}
-              accessible={true}
-              accessibilityRole="button"
-              accessibilityLabel={`Option ${index + 1}: ${option}`}
-            >
-              <Text
+            return (
+              <Pressable
+                key={index}
+                onPress={() => handleSelect(index)}
+                disabled={selectedIndex !== null}
                 style={[
-                  styles.optionText,
-                  (isSelected || showCorrect || showWrong) && styles.optionTextSelected,
+                  styles.option,
+                  isSelected && styles.optionSelected,
+                  showCorrect && styles.optionCorrect,
+                  showWrong && styles.optionWrong,
                 ]}
+                accessible={true}
+                accessibilityRole="button"
+                accessibilityLabel={`Option ${index + 1}: ${option}`}
               >
-                {option}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
+                <Text
+                  style={[
+                    styles.optionText,
+                    (isSelected || showCorrect || showWrong) && styles.optionTextSelected,
+                  ]}
+                >
+                  {option}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </ScrollView>
 
       <View style={styles.footer}>
         <Button
@@ -205,6 +209,7 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.lg,
+    paddingBottom: spacing.md,
   },
   backButton: {
     minHeight: touchable.minHeight,
@@ -234,17 +239,20 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondary,
     borderRadius: radius.full,
   },
-  questionContainer: {
-    flex: 1,
-    justifyContent: 'center',
+  content: {
     paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.lg,
+  },
+  questionContainer: {
+    alignItems: 'center',
     gap: spacing.md,
+    paddingBottom: spacing.lg,
   },
   questionImage: {
     width: '100%',
     height: 180,
     borderRadius: radius.xl,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.md,
     backgroundColor: colors.surfaceHigh,
   },
   questionTitle: {
@@ -262,9 +270,12 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     textAlign: 'center',
   },
+  audioButton: {
+    alignSelf: 'center',
+  },
   options: {
-    paddingHorizontal: spacing.lg,
     gap: spacing.md,
+    paddingBottom: spacing.lg,
   },
   option: {
     backgroundColor: colors.surfaceLow,
