@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -104,5 +105,19 @@ public class AuthService {
         guestUser = userRepository.save(guestUser);
         String jwt = jwtService.generateTokenFromUsername(guestUser.getUsername());
         return new AuthResponse(jwt, guestUser.getId(), guestUser.getUsername(), guestUser.getEmail(), "ROLE_GUEST");
+    }
+
+    @Transactional
+    public void logout(Authentication authentication) {
+        Authentication auth = authentication != null ? authentication : SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            String username = auth.getName();
+            userRepository.findByUsername(username).ifPresent(user -> {
+                if (user.getRole() == Role.GUEST || user.getProvider() == AuthProvider.GUEST) {
+                    userRepository.deleteByUsername(username);
+                }
+            });
+        }
+        SecurityContextHolder.clearContext();
     }
 }

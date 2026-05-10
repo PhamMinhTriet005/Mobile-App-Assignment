@@ -1,8 +1,9 @@
 {
   "expo": {
-    "name": "SEdu",
-    "slug": "sedu",
+    "name": "mobile",
+    "slug": "mobile",
     "version": "1.0.0",
+    "scheme": "sedu-app",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -16,13 +17,20 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.mobiledev.sedu",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "edgeToEdgeEnabled": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-secure-store",
+      "expo-font",
+      "expo-web-browser"
+    ]
   }
 }
