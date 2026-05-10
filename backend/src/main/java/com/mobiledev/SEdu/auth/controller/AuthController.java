@@ -9,6 +9,7 @@ import com.mobiledev.SEdu.auth.service.AuthService;
 import com.mobiledev.SEdu.shared.dto.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -43,5 +44,11 @@ public class AuthController {
     public ResponseEntity<ApiResponse<AuthResponse>> authenticateGuest() {
         AuthResponse response = authService.authenticateGuest();
         return ResponseEntity.ok(new ApiResponse<>(true, "Guest user logged in successfully", response));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<Void>> logout(Authentication authentication) {
+        authService.logout(authentication);
+        return ResponseEntity.ok(new ApiResponse<>(true, "User logged out successfully", null));
     }
 }

@@ -36,12 +36,12 @@ const ACTION_CARDS = [
 ];
 
 export default function HomeScreen({ navigation }) {
-  const { user, clearSession } = useAuthStore();
+  const { user, logout } = useAuthStore();
   const [greeting, setGreeting] = useState('Welcome back');
 
   useEffect(() => {
     if (user?.username) {
-      setGreeting(`Welcome back, ${user.username}!`);
+      setGreeting(`Welcome back, ${user.username} !`);
     }
   }, [user]);
 
@@ -50,7 +50,7 @@ export default function HomeScreen({ navigation }) {
       <ScreenHeader
         title={greeting}
         right={
-          <Pressable onPress={clearSession} style={styles.logoutButton}>
+          <Pressable onPress={logout} style={styles.logoutButton}>
             <Ionicons name="log-out" size={24} color={theme.colors.primary} />
             <AppText style={styles.logout}>Logout</AppText>
           </Pressable>

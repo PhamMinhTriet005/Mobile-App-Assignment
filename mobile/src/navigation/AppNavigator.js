@@ -6,6 +6,7 @@ import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import GuestScreen from '../screens/auth/GuestScreen';
 import GoogleLoginScreen from '../screens/auth/GoogleLoginScreen';
+import HomeScreen from '../screens/learning/HomeScreen';
 import LanguageSelectScreen from '../screens/learning/LanguageSelectScreen';
 import TopicListScreen from '../screens/learning/TopicListScreen';
 import TopicDetailScreen from '../screens/learning/TopicDetailScreen';
@@ -19,34 +20,32 @@ const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
   const { token } = useAuthStore();
-  const navigationRef = useNavigationContainerRef();
-
-  useEffect(() => {
-    useAuthStore.getState().setNavigateRef(navigationRef);
-  }, [navigationRef]);
 
   return (
-    <NavigationContainer ref={navigationRef}>
+    <NavigationContainer>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
-        initialRouteName={token ? 'Languages' : 'Login'}
       >
-        {!token ? (
+        {token == null ? (
           <>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen name="Guest" component={GuestScreen} />
             <Stack.Screen name="GoogleLogin" component={GoogleLoginScreen} />
           </>
-        ) : null}
-        <Stack.Screen name="Languages" component={LanguageSelectScreen} />
-        <Stack.Screen name="Topics" component={TopicListScreen} />
-        <Stack.Screen name="TopicDetail" component={TopicDetailScreen} />
-        <Stack.Screen name="VocabularyList" component={VocabularyListScreen} />
-        <Stack.Screen name="VocabularyDetail" component={VocabularyDetailScreen} />
-        <Stack.Screen name="Lesson" component={LessonScreen} />
-        <Stack.Screen name="Quiz" component={QuizScreen} />
-        <Stack.Screen name="QuizResult" component={QuizResultScreen} />
+        ) : (
+          <>
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Languages" component={LanguageSelectScreen} />
+            <Stack.Screen name="Topics" component={TopicListScreen} />
+            <Stack.Screen name="TopicDetail" component={TopicDetailScreen} />
+            <Stack.Screen name="VocabularyList" component={VocabularyListScreen} />
+            <Stack.Screen name="VocabularyDetail" component={VocabularyDetailScreen} />
+            <Stack.Screen name="Lesson" component={LessonScreen} />
+            <Stack.Screen name="Quiz" component={QuizScreen} />
+            <Stack.Screen name="QuizResult" component={QuizResultScreen} />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

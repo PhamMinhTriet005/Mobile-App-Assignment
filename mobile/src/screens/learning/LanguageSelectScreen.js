@@ -11,9 +11,7 @@ import useAuthStore from '../../state/authStore';
 export default function LanguageSelectScreen({ navigation }) {
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuthStore();
-
-  const greeting = user?.username ? `Welcome, ${user.username}!` : 'Welcome!';
+  const { user, logout } = useAuthStore();
 
   useEffect(() => {
     const load = async () => {
@@ -31,10 +29,16 @@ export default function LanguageSelectScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.greetingContainer}>
-        <AppText style={styles.greeting}>{greeting}</AppText>
-        <AppText style={styles.greetingSubtitle}>Choose a language to start learning</AppText>
-      </View>
+      <ScreenHeader
+        title={user?.username ? `Welcome, ${user.username}!` : 'Welcome!'}
+        subtitle="Choose a language to start learning"
+        right={
+          <Pressable onPress={logout} style={styles.logoutButton}>
+            <Ionicons name="log-out" size={24} color={theme.colors.primary} />
+            <AppText style={styles.logoutText}>Logout</AppText>
+          </Pressable>
+        }
+      />
 
       {loading ? (
         <View style={styles.loadingContainer}>
@@ -81,17 +85,15 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
     padding: 24
   },
-  greetingContainer: {
-    marginBottom: 24,
-    marginTop: 16
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center'
   },
-  greeting: {
-    ...theme.typography.headlineLG
-  },
-  greetingSubtitle: {
-    marginTop: 8,
+  logoutText: {
+    marginLeft: 6,
     ...theme.typography.bodyMD,
-    color: theme.colors.onSurfaceVariant
+    color: theme.colors.primary,
+    fontWeight: '600'
   },
   list: {
     paddingBottom: 24

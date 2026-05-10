@@ -1,7 +1,6 @@
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import API_BASE_URL from './config';
-import useAuthStore from '../state/authStore';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -18,9 +17,15 @@ api.interceptors.request.use(async (config) => {
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     if (error.response?.status === 403) {
-      useAuthStore.getState().logout();
+      try {
+        // Dynamic import to break require cycle: client -> authStore -> auth -> client
+        const { default: useAuthStore } = await import('../state/authStore');
+        useAuthStore.getState().logout();
+      } catch (e) {
+        console.error('Failed to trigger logout from interceptor', e);
+      }
     }
     return Promise.reject(error);
   }
