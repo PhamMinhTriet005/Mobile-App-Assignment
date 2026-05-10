@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { View, StyleSheet, TextInput, Pressable } from 'react-native';
+import { View, StyleSheet, TextInput, Pressable, ScrollView } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import AppText from '../../components/AppText';
 import ButtonPrimary from '../../components/ButtonPrimary';
+import ScreenHeader from '../../components/ScreenHeader';
 import { loginWithGoogle } from '../../api/auth';
 import useAuthStore from '../../state/authStore';
 import theme from '../../theme';
@@ -22,37 +24,70 @@ export default function GoogleLoginScreen({ navigation }) {
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <Pressable onPress={() => navigation.goBack()}>
-        <AppText style={styles.link}>Back</AppText>
-      </Pressable>
-      <AppText style={styles.title}>Google sign-in</AppText>
-      <AppText style={styles.subtitle}>Paste your Google ID token</AppText>
+  const renderBackButton = () => (
+    <Pressable onPress={() => navigation.goBack()} style={styles.navButton}>
+      <Ionicons name="arrow-back" size={28} color={theme.colors.primary} />
+    </Pressable>
+  );
 
-      <TextInput
-        value={idToken}
-        onChangeText={setIdToken}
-        placeholder="Google ID token"
-        placeholderTextColor={theme.colors.onSurfaceVariant}
-        style={styles.input}
+  const renderHomeButton = () => (
+    <Pressable onPress={() => navigation.navigate('Home')} style={styles.navButton}>
+      <Ionicons name="home" size={28} color={theme.colors.primary} />
+    </Pressable>
+  );
+
+  return (
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <ScreenHeader
+        title="Google Sign-In"
+        left={renderBackButton()}
+        right={renderHomeButton()}
       />
+
+      <View style={styles.header}>
+        <Ionicons name="logo-google" size={60} color={theme.colors.primary} />
+        <AppText style={styles.title}>Sign in with Google</AppText>
+        <AppText style={styles.subtitle}>Paste your Google ID token to sign in</AppText>
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Ionicons name="key" size={24} color={theme.colors.onSurfaceVariant} style={styles.inputIcon} />
+        <TextInput
+          value={idToken}
+          onChangeText={setIdToken}
+          placeholder="Google ID Token"
+          placeholderTextColor={theme.colors.onSurfaceVariant}
+          style={styles.input}
+          multiline
+        />
+      </View>
 
       <ButtonPrimary
-        title={loading ? 'Signing in...' : 'Sign in with Google'}
+        title={loading ? 'Signing in...' : 'Sign In with Google'}
         onPress={handleGoogleLogin}
-        disabled={loading}
+        disabled={loading || !idToken}
+        iconName="logo-google"
       />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
-    paddingHorizontal: 24,
-    paddingTop: 48
+    backgroundColor: theme.colors.background
+  },
+  content: {
+    padding: 24,
+    paddingTop: 16
+  },
+  navButton: {
+    padding: 8
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 32,
+    marginTop: 20
   },
   title: {
     marginTop: 16,
@@ -62,19 +97,27 @@ const styles = StyleSheet.create({
     marginTop: 8,
     ...theme.typography.bodyMD,
     color: theme.colors.onSurfaceVariant,
-    marginBottom: 24
+    textAlign: 'center'
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    backgroundColor: theme.colors.surfaceContainerLow,
+    borderRadius: theme.radius.lg,
+    marginBottom: 24,
+    borderWidth: 2,
+    borderColor: theme.colors.outlineVariant,
+    alignItems: 'flex-start'
+  },
+  inputIcon: {
+    paddingHorizontal: 16,
+    paddingTop: 18
   },
   input: {
-    borderRadius: theme.radius.lg,
-    backgroundColor: theme.colors.surfaceContainerLow,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    marginBottom: 16,
+    flex: 1,
+    paddingVertical: 18,
+    paddingRight: 16,
+    minHeight: 120,
     color: theme.colors.onSurface,
     ...theme.typography.bodyMD
-  },
-  link: {
-    ...theme.typography.bodyMD,
-    color: theme.colors.primaryContainer
   }
 });

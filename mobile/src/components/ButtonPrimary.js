@@ -1,44 +1,83 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import AppText from './AppText';
 import theme from '../theme';
 
-export default function ButtonPrimary({ title, onPress, style, disabled }) {
+export default function ButtonPrimary({ title, onPress, style, disabled, iconName, variant = 'primary' }) {
+  const getBackgroundColor = () => {
+    if (disabled) return theme.colors.surfaceContainerHigh;
+    switch (variant) {
+      case 'secondary':
+        return theme.colors.secondaryContainer;
+      case 'tertiary':
+        return theme.colors.tertiaryContainer;
+      case 'success':
+        return theme.colors.success;
+      default:
+        return theme.colors.primaryContainer;
+    }
+  };
+
+  const getTextColor = () => {
+    if (disabled) return theme.colors.onSurfaceVariant;
+    switch (variant) {
+      case 'secondary':
+        return theme.colors.onSecondary;
+      case 'tertiary':
+        return theme.colors.onTertiary;
+      case 'success':
+        return '#FFFFFF';
+      default:
+        return theme.colors.onPrimary;
+    }
+  };
+
   return (
     <Pressable
       onPress={onPress}
       disabled={disabled}
       style={({ pressed }) => [
         styles.button,
+        { backgroundColor: getBackgroundColor() },
         pressed && styles.pressed,
         disabled && styles.disabled,
         style
       ]}
     >
-      <AppText style={styles.text}>{title}</AppText>
+      {iconName && (
+        <Ionicons name={iconName} size={26} color={getTextColor()} style={styles.icon} />
+      )}
+      <AppText style={[styles.text, { color: getTextColor() }]}>{title}</AppText>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: theme.colors.primaryContainer,
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: theme.radius.lg,
+    flexDirection: 'row',
     alignItems: 'center',
-    minHeight: theme.spacing.touchTargetMin,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 32,
+    borderRadius: theme.radius.lg,
+    minHeight: 64,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 4
   },
   pressed: {
     opacity: 0.9,
-    transform: [{ translateY: 1 }]
+    transform: [{ translateY: 2 }]
   },
   disabled: {
-    backgroundColor: theme.colors.surfaceContainerHigh,
-    opacity: 0.7
+    opacity: 0.6
+  },
+  icon: {
+    marginRight: 12
   },
   text: {
-    color: theme.colors.onPrimary,
     ...theme.typography.button
   }
 });

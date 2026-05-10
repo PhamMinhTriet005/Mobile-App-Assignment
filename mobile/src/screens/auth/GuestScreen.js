@@ -1,11 +1,13 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import AppText from '../../components/AppText';
 import ButtonPrimary from '../../components/ButtonPrimary';
+import ScreenHeader from '../../components/ScreenHeader';
 import { loginAsGuest } from '../../api/auth';
 import useAuthStore from '../../state/authStore';
 import theme from '../../theme';
 
-export default function GuestScreen() {
+export default function GuestScreen({ navigation }) {
   const { setSession } = useAuthStore();
 
   const handleGuest = async () => {
@@ -17,13 +19,38 @@ export default function GuestScreen() {
     }
   };
 
+  const renderBackButton = () => (
+    <Pressable onPress={() => navigation.goBack()} style={styles.navButton}>
+      <Ionicons name="arrow-back" size={28} color={theme.colors.primary} />
+    </Pressable>
+  );
+
+  const renderHomeButton = () => (
+    <Pressable onPress={() => navigation.navigate('Home')} style={styles.navButton}>
+      <Ionicons name="home" size={28} color={theme.colors.primary} />
+    </Pressable>
+  );
+
   return (
     <View style={styles.container}>
-      <AppText style={styles.title}>Continue as guest</AppText>
-      <AppText style={styles.subtitle}>
-        You can explore lessons and take quizzes without an account.
-      </AppText>
-      <ButtonPrimary title="Start learning" onPress={handleGuest} />
+      <ScreenHeader
+        title="Guest Mode"
+        left={renderBackButton()}
+        right={renderHomeButton()}
+      />
+
+      <View style={styles.content}>
+        <Ionicons name="person-circle-outline" size={100} color={theme.colors.primary} />
+        <AppText style={styles.title}>Continue as Guest</AppText>
+        <AppText style={styles.subtitle}>
+          You can explore lessons and take quizzes without an account.
+        </AppText>
+        <ButtonPrimary 
+          title="Start Learning" 
+          onPress={handleGuest} 
+          iconName="arrow-forward"
+        />
+      </View>
     </View>
   );
 }
@@ -32,16 +59,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    paddingHorizontal: 24,
-    paddingTop: 64
+    padding: 24
+  },
+  navButton: {
+    padding: 8
+  },
+  content: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   title: {
+    marginTop: 24,
     ...theme.typography.headlineLG
   },
   subtitle: {
     marginTop: 12,
     ...theme.typography.bodyMD,
     color: theme.colors.onSurfaceVariant,
-    marginBottom: 24
+    textAlign: 'center',
+    marginBottom: 32,
+    paddingHorizontal: 20
   }
 });

@@ -1,9 +1,10 @@
 import { useEffect, useMemo } from 'react';
 import { View, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import AppText from '../../components/AppText';
 import Card from '../../components/Card';
-import StatPill from '../../components/StatPill';
 import ButtonPrimary from '../../components/ButtonPrimary';
+import ScreenHeader from '../../components/ScreenHeader';
 import theme from '../../theme';
 import { submitTestResult } from '../../api/quiz';
 import useAuthStore from '../../state/authStore';
@@ -39,22 +40,94 @@ export default function QuizResultScreen({ route, navigation }) {
     submit();
   }, [result, topicId, user]);
 
+  const getScoreColor = () => {
+    if (result.percentage >= 80) return theme.colors.success;
+    if (result.percentage >= 60) return theme.colors.warning;
+    return theme.colors.error;
+  };
+
+  const getScoreIcon = () => {
+    if (result.percentage >= 80) return 'trophy';
+    if (result.percentage >= 60) return 'thumbs-up';
+    return 'school';
+  };
+
+  const renderBackButton = () => (
+    <Pressable onPress={() => navigation.goBack()} style={styles.navButton}>
+      <Ionicons name="arrow-back" size={28} color={theme.colors.primary} />
+    </Pressable>
+  );
+
+  const renderHomeButton = () => (
+    <Pressable onPress={() => navigation.navigate('Home')} style={styles.navButton}>
+      <Ionicons name="home" size={28} color={theme.colors.primary} />
+    </Pressable>
+  );
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <AppText style={styles.title}>Great job!</AppText>
-      <AppText style={styles.score}>{result.correct} / {result.total}</AppText>
+      <ScreenHeader
+        title="Quiz Result"
+        left={renderBackButton()}
+        right={renderHomeButton()}
+      />
 
-      <Card style={styles.card}>
-        <AppText style={styles.subtitle}>Keep practicing to improve!</AppText>
+      <View style={styles.scoreContainer}>
+        <View style={[styles.scoreCircle, { borderColor: getScoreColor() }]}>
+          <Ionicons name={getScoreIcon()} size={64} color={getScoreColor()} />
+        </View>
+        <AppText style={[styles.title, { color: getScoreColor() }]}>
+          {result.percentage >= 80 ? 'Excellent!' : result.percentage >= 60 ? 'Good Job!' : 'Keep Practicing!'}
+        </AppText>
+        <AppText style={styles.score}>{result.correct} / {result.total}</AppText>
+        <AppText style={styles.percentage}>{result.percentage}% Correct</AppText>
+      </View>
+
+      <Card style={styles.card} accentColor={theme.colors.primary}>
         <View style={styles.statsRow}>
-          <StatPill label="Accuracy" value={`${result.percentage}%`} />
+          <View style={styles.statItem}>
+            <Ionicons name="checkmark-circle" size={32} color={theme.colors.success} />
+            <AppText style={styles.statValue}>{result.correct}</AppText>
+            <AppText style={styles.statLabel}>Correct</AppText>
+          </View>
+          <View style={styles.statItem}>
+            <Ionicons name="close-circle" size={32} color={theme.colors.error} />
+            <AppText style={styles.statValue}>{result.total - result.correct}</AppText>
+            <AppText style={styles.statLabel}>Incorrect</AppText>
+          </View>
+          <View style={styles.statItem}>
+            <Ionicons name="analytics" size={32} color={theme.colors.primary} />
+            <AppText style={styles.statValue}>{result.percentage}%</AppText>
+            <AppText style={styles.statLabel}>Accuracy</AppText>
+          </View>
         </View>
       </Card>
 
+      <View style={styles.messageContainer}>
+        <AppText style={styles.message}>
+          {result.percentage >= 80 
+            ? 'Amazing! You\'re doing great with your language learning!'
+            : result.percentage >= 60 
+            ? 'Good work! Keep practicing to improve even more!'
+            : 'Don\'t give up! Practice makes perfect.'}
+        </AppText>
+      </View>
+
       <View style={styles.actions}>
-        <ButtonPrimary title="Try again" onPress={() => navigation.goBack()} />
-        <Pressable onPress={() => navigation.navigate('Home')}>
-          <AppText style={styles.link}>Back to Vocabulary</AppText>
+        <ButtonPrimary 
+          title="Try Again" 
+          onPress={() => navigation.navigate('Quiz', { 
+            topicId: topicId,
+            resetKey: Date.now()
+          })} 
+          iconName="refresh"
+        />
+        <Pressable 
+          onPress={() => navigation.navigate('Home')}
+          style={styles.homeButton}
+        >
+          <Ionicons name="home" size={24} color={theme.colors.primary} />
+          <AppText style={styles.homeText}>Back to Home</AppText>
         </Pressable>
       </View>
     </ScrollView>
@@ -70,33 +143,82 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingBottom: 48
   },
+  navButton: {
+    padding: 8
+  },
+  scoreContainer: {
+    alignItems: 'center',
+    marginBottom: 32
+  },
+  scoreCircle: {
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    borderWidth: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.colors.surfaceContainerLowest,
+    marginBottom: 20
+  },
   title: {
-    ...theme.typography.headlineLG
+    ...theme.typography.headlineLG,
+    marginBottom: 8
   },
   score: {
-    marginTop: 8,
     ...theme.typography.headlineXL,
-    color: theme.colors.primaryContainer
+    color: theme.colors.onSurface
+  },
+  percentage: {
+    marginTop: 8,
+    ...theme.typography.headlineMD,
+    color: theme.colors.onSurfaceVariant
   },
   card: {
-    marginTop: 20
-  },
-  subtitle: {
-    ...theme.typography.bodyMD,
-    color: theme.colors.onSurfaceVariant,
-    marginBottom: 16
+    marginBottom: 24
   },
   statsRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    justifyContent: 'space-around'
+  },
+  statItem: {
+    alignItems: 'center'
+  },
+  statValue: {
+    marginTop: 8,
+    ...theme.typography.headlineMD
+  },
+  statLabel: {
+    marginTop: 4,
+    ...theme.typography.bodyMD,
+    color: theme.colors.onSurfaceVariant
+  },
+  messageContainer: {
+    padding: 20,
+    backgroundColor: theme.colors.surfaceContainerLow,
+    borderRadius: theme.radius.lg,
+    marginBottom: 28
+  },
+  message: {
+    ...theme.typography.bodyLG,
+    color: theme.colors.onSurface,
+    textAlign: 'center'
   },
   actions: {
-    marginTop: 24
+    gap: 16
   },
-  link: {
-    marginTop: 12,
+  homeButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 20,
+    backgroundColor: theme.colors.surfaceContainerLow,
+    borderRadius: theme.radius.lg,
+    borderWidth: 2,
+    borderColor: theme.colors.primary
+  },
+  homeText: {
+    marginLeft: 10,
     ...theme.typography.bodyMD,
-    color: theme.colors.primaryContainer,
-    textAlign: 'center'
+    color: theme.colors.primary
   }
 });

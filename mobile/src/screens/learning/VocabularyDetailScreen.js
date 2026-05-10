@@ -1,40 +1,71 @@
 import { View, StyleSheet, ScrollView, Image, Pressable } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import AppText from '../../components/AppText';
 import ButtonPrimary from '../../components/ButtonPrimary';
 import Card from '../../components/Card';
+import ScreenHeader from '../../components/ScreenHeader';
 import theme from '../../theme';
 
 export default function VocabularyDetailScreen({ route, navigation }) {
   const { vocab } = route.params || {};
 
+  const renderBackButton = () => (
+    <Pressable onPress={() => navigation.goBack()} style={styles.navButton}>
+      <Ionicons name="arrow-back" size={28} color={theme.colors.primary} />
+    </Pressable>
+  );
+
+  const renderHomeButton = () => (
+    <Pressable onPress={() => navigation.navigate('Home')} style={styles.navButton}>
+      <Ionicons name="home" size={28} color={theme.colors.primary} />
+    </Pressable>
+  );
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Pressable onPress={() => navigation.goBack()}>
-        <AppText style={styles.link}>Back</AppText>
-      </Pressable>
+      <ScreenHeader
+        title="Vocabulary"
+        left={renderBackButton()}
+        right={renderHomeButton()}
+      />
 
-      <AppText style={styles.title}>{vocab?.word || 'Vocabulary'}</AppText>
-      <AppText style={styles.subtitle}>{vocab?.type || 'Noun'}</AppText>
+      <View style={styles.wordContainer}>
+        <AppText style={styles.title}>{vocab?.word || 'Vocabulary'}</AppText>
+        <View style={styles.typeBadge}>
+          <AppText style={styles.typeText}>{vocab?.type || 'Noun'}</AppText>
+        </View>
+      </View>
 
       {vocab?.imageUrl ? (
         <Image source={{ uri: vocab.imageUrl }} style={styles.image} />
-      ) : null}
+      ) : (
+        <View style={styles.imagePlaceholder}>
+          <Ionicons name="image-outline" size={80} color={theme.colors.onSurfaceVariant} />
+        </View>
+      )}
 
-      <Card style={styles.card}>
-        <AppText style={styles.sectionTitle}>Definition</AppText>
-        <AppText style={styles.bodyText}>{vocab?.meaning || '...'}</AppText>
+      <Card style={styles.card} accentColor={theme.colors.primary}>
+        <View style={styles.sectionHeader}>
+          <Ionicons name="book" size={28} color={theme.colors.primary} />
+          <AppText style={styles.sectionTitle}>Definition</AppText>
+        </View>
+        <AppText style={styles.bodyText}>{vocab?.meaning || 'No definition available'}</AppText>
       </Card>
 
-      <Card style={styles.card}>
-        <AppText style={styles.sectionTitle}>Example</AppText>
+      <Card style={styles.card} accentColor={theme.colors.secondary}>
+        <View style={styles.sectionHeader}>
+          <Ionicons name="chatbubble" size={28} color={theme.colors.secondary} />
+          <AppText style={styles.sectionTitle}>Example</AppText>
+        </View>
         <AppText style={styles.bodyText}>
           Use "{vocab?.word || 'word'}" in a sentence to reinforce meaning.
         </AppText>
       </Card>
 
       <ButtonPrimary
-        title="Practice this word"
+        title="Practice This Word"
         onPress={() => navigation.navigate('Quiz', { topicId: vocab?.topicId })}
+        iconName="fitness"
       />
     </ScrollView>
   );
@@ -49,35 +80,59 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingBottom: 48
   },
-  link: {
-    ...theme.typography.bodyMD,
-    color: theme.colors.primaryContainer
+  navButton: {
+    padding: 8
+  },
+  wordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20
   },
   title: {
-    marginTop: 16,
-    ...theme.typography.headlineLG
+    ...theme.typography.headlineXL
   },
-  subtitle: {
-    marginTop: 4,
+  typeBadge: {
+    marginLeft: 16,
+    backgroundColor: theme.colors.surfaceContainerLow,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: theme.radius.full
+  },
+  typeText: {
     ...theme.typography.bodyMD,
     color: theme.colors.onSurfaceVariant
   },
   image: {
     width: '100%',
-    height: 220,
+    height: 240,
     borderRadius: theme.radius.xl,
-    marginTop: 20
+    marginBottom: 24
+  },
+  imagePlaceholder: {
+    width: '100%',
+    height: 200,
+    borderRadius: theme.radius.xl,
+    backgroundColor: theme.colors.surfaceContainerLow,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24
   },
   card: {
-    marginTop: 16
+    marginBottom: 20
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12
   },
   sectionTitle: {
+    marginLeft: 12,
     ...theme.typography.labelLG,
-    color: theme.colors.primary
+    color: theme.colors.onSurface
   },
   bodyText: {
-    marginTop: 8,
     ...theme.typography.bodyMD,
-    color: theme.colors.onSurfaceVariant
+    color: theme.colors.onSurfaceVariant,
+    lineHeight: 32
   }
 });

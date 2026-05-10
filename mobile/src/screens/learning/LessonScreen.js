@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { View, StyleSheet, Image, Pressable } from 'react-native';
+import { View, StyleSheet, Image, Pressable, ScrollView } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import AppText from '../../components/AppText';
 import ButtonPrimary from '../../components/ButtonPrimary';
-import OptionButton from '../../components/OptionButton';
+import ScreenHeader from '../../components/ScreenHeader';
 import theme from '../../theme';
 import { getVocabulariesByTopic } from '../../api/learning';
 
@@ -29,79 +30,196 @@ export default function LessonScreen({ route, navigation }) {
   }, [topic]);
 
   const current = vocabularies[index];
+  const progress = vocabularies.length > 0 ? ((index + 1) / vocabularies.length) * 100 : 0;
+
+  const handleNext = () => {
+    if (index + 1 >= vocabularies.length) {
+      navigation.navigate('Quiz', { topicId: topic?.id });
+    } else {
+      setIndex((prev) => prev + 1);
+    }
+  };
+
+  const renderBackButton = () => (
+    <Pressable onPress={() => navigation.goBack()} style={styles.navButton}>
+      <Ionicons name="arrow-back" size={28} color={theme.colors.primary} />
+    </Pressable>
+  );
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ScreenHeader
+          title={topic?.name || 'Lesson'}
+          left={renderBackButton()}
+        />
+        <View style={styles.loadingContainer}>
+          <Ionicons name="hourglass" size={64} color={theme.colors.primary} />
+          <AppText style={styles.loadingTitle}>Loading Lesson...</AppText>
+        </View>
+      </View>
+    );
+  }
+
+  if (vocabularies.length === 0) {
+    return (
+      <View style={styles.container}>
+        <ScreenHeader
+          title={topic?.name || 'Lesson'}
+          left={renderBackButton()}
+        />
+        <View style={styles.loadingContainer}>
+          <Ionicons name="alert-circle" size={64} color={theme.colors.onSurfaceVariant} />
+          <AppText style={styles.loadingTitle}>No Vocabulary Found</AppText>
+          <AppText style={styles.loadingText}>No vocabulary available for this topic.</AppText>
+        </View>
+      </View>
+    );
+  }
 
   return (
-    <View style={styles.container}>
-      <Pressable onPress={() => navigation.goBack()}>
-        <AppText style={styles.link}>Back</AppText>
-      </Pressable>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <ScreenHeader
+        title={topic?.name || 'Lesson'}
+        left={renderBackButton()}
+      />
 
-      <AppText style={styles.title}>{topic?.name || 'Lesson'}</AppText>
-      {loading ? (
-        <AppText style={styles.subtitle}>Loading lesson...</AppText>
-      ) : vocabularies.length === 0 ? (
-        <AppText style={styles.subtitle}>No vocabulary found for this topic.</AppText>
-      ) : (
-        <AppText style={styles.subtitle}>Step {index + 1} of {vocabularies.length}</AppText>
-      )}
+      <View style={styles.progressContainer}>
+        <View style={styles.progressBar}>
+          <View style={[styles.progressFill, { width: `${progress}%` }]} />
+        </View>
+        <AppText style={styles.progressText}>Word {index + 1} of {vocabularies.length}</AppText>
+      </View>
 
-      {current?.imageUrl ? (
-        <Image source={{ uri: current.imageUrl }} style={styles.image} />
-      ) : null}
+      <View style={styles.wordCard}>
+        {current?.imageUrl ? (
+          <Image source={{ uri: current.imageUrl }} style={styles.image} />
+        ) : (
+          <View style={styles.imagePlaceholder}>
+            <Ionicons name="image-outline" size={80} color={theme.colors.onSurfaceVariant} />
+          </View>
+        )}
+        <AppText style={styles.word}>{current?.word || '...'}</AppText>
+        <AppText style={styles.meaning}>{current?.meaning || ''}</AppText>
+        <View style={styles.typeBadge}>
+          <AppText style={styles.typeText}>{current?.type?.toUpperCase() || 'Noun'}</AppText>
+        </View>
+      </View>
 
-      <AppText style={styles.word}>{current?.word || '...'}</AppText>
-      <AppText style={styles.pronunciation}>{current?.meaning || ''}</AppText>
-
-      <OptionButton label="Play audio" onPress={() => {}} />
+      <View style={styles.audioButton}>
+        <ButtonPrimary
+          title="Play Audio"
+          onPress={() => {}}
+          variant="secondary"
+          iconName="volume-high"
+        />
+      </View>
 
       <ButtonPrimary
-        title={index + 1 >= vocabularies.length ? 'Take quiz' : 'Next'}
-        onPress={() => {
-          if (index + 1 >= vocabularies.length) {
-            navigation.navigate('Quiz', { topicId: topic?.id });
-          } else {
-            setIndex((prev) => prev + 1);
-          }
-        }}
-        disabled={loading || vocabularies.length === 0}
+        title={index + 1 >= vocabularies.length ? 'Take Quiz' : 'Next Word'}
+        onPress={handleNext}
+        iconName={index + 1 >= vocabularies.length ? 'help-circle' : 'arrow-forward'}
       />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
-    padding: 24
+    backgroundColor: theme.colors.background
   },
-  link: {
-    ...theme.typography.bodyMD,
-    color: theme.colors.primaryContainer
+  content: {
+    padding: 24,
+    paddingBottom: 48
   },
-  title: {
-    marginTop: 12,
-    ...theme.typography.headlineLG
+  navButton: {
+    padding: 8
   },
-  subtitle: {
-    marginTop: 6,
-    ...theme.typography.bodyMD,
-    color: theme.colors.onSurfaceVariant
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
-  image: {
-    width: '100%',
-    height: 220,
-    borderRadius: theme.radius.xl,
-    marginTop: 20
-  },
-  word: {
+  loadingTitle: {
     marginTop: 20,
     ...theme.typography.headlineMD
   },
-  pronunciation: {
+  loadingText: {
+    marginTop: 8,
+    ...theme.typography.bodyMD,
+    color: theme.colors.onSurfaceVariant
+  },
+  progressContainer: {
+    marginBottom: 24
+  },
+  progressBar: {
+    height: 10,
+    backgroundColor: theme.colors.surfaceContainerLow,
+    borderRadius: 5,
+    overflow: 'hidden'
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: theme.colors.primary,
+    borderRadius: 5
+  },
+  progressText: {
     marginTop: 8,
     ...theme.typography.bodyMD,
     color: theme.colors.onSurfaceVariant,
+    textAlign: 'center'
+  },
+  wordCard: {
+    backgroundColor: theme.colors.surfaceContainerLowest,
+    borderRadius: theme.radius.xl,
+    padding: 24,
+    alignItems: 'center',
+    marginBottom: 24,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3
+  },
+  image: {
+    width: 200,
+    height: 160,
+    borderRadius: theme.radius.lg,
     marginBottom: 20
+  },
+  imagePlaceholder: {
+    width: 200,
+    height: 160,
+    borderRadius: theme.radius.lg,
+    backgroundColor: theme.colors.surfaceContainerLow,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20
+  },
+  word: {
+    ...theme.typography.headlineXL,
+    textAlign: 'center'
+  },
+  meaning: {
+    marginTop: 12,
+    ...theme.typography.headlineMD,
+    color: theme.colors.onSurfaceVariant,
+    textAlign: 'center'
+  },
+  typeBadge: {
+    marginTop: 16,
+    backgroundColor: theme.colors.primaryContainer,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: theme.radius.full
+  },
+  typeText: {
+    ...theme.typography.bodyMD,
+    color: theme.colors.onPrimary,
+    fontWeight: '600'
+  },
+  audioButton: {
+    marginBottom: 24
   }
 });

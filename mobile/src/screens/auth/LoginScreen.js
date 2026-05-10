@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { View, StyleSheet, TextInput, Pressable } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { login, loginAsGuest } from '../../api/auth';
 import useAuthStore from '../../state/authStore';
 import AppText from '../../components/AppText';
@@ -36,43 +37,68 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <AppText style={styles.title}>Welcome back</AppText>
-      <AppText style={styles.subtitle}>Sign in to continue learning</AppText>
-
-      <TextInput
-        value={username}
-        onChangeText={setUsername}
-        placeholder="Username"
-        placeholderTextColor={theme.colors.onSurfaceVariant}
-        style={styles.input}
-      />
-      <TextInput
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Password"
-        placeholderTextColor={theme.colors.onSurfaceVariant}
-        secureTextEntry
-        style={styles.input}
-      />
-
-      <ButtonPrimary
-        title={loading ? 'Signing in...' : 'Sign in'}
-        onPress={handleLogin}
-        disabled={loading}
-      />
-
-      <View style={styles.actionsRow}>
-        <Pressable onPress={() => navigation.navigate('Register')}>
-          <AppText style={styles.link}>Create account</AppText>
-        </Pressable>
-        <Pressable onPress={() => navigation.navigate('GoogleLogin')}>
-          <AppText style={styles.link}>Google sign-in</AppText>
-        </Pressable>
+      <View style={styles.logoContainer}>
+        <Ionicons name="school" size={80} color={theme.colors.primary} />
+        <AppText style={styles.appName}>S-Edu</AppText>
+        <AppText style={styles.tagline}>Language Learning for Everyone</AppText>
       </View>
 
-      <Pressable onPress={handleGuest} style={styles.guestButton}>
-        <AppText style={styles.guestText}>Continue as guest</AppText>
-      </Pressable>
+      <View style={styles.formContainer}>
+        <AppText style={styles.title}>Welcome Back!</AppText>
+        <AppText style={styles.subtitle}>Sign in to continue your learning journey</AppText>
+
+        <View style={styles.inputContainer}>
+          <Ionicons name="person" size={24} color={theme.colors.onSurfaceVariant} style={styles.inputIcon} />
+          <TextInput
+            value={username}
+            onChangeText={setUsername}
+            placeholder="Username"
+            placeholderTextColor={theme.colors.onSurfaceVariant}
+            style={styles.input}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Ionicons name="lock-closed" size={24} color={theme.colors.onSurfaceVariant} style={styles.inputIcon} />
+          <TextInput
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Password"
+            placeholderTextColor={theme.colors.onSurfaceVariant}
+            secureTextEntry
+            style={styles.input}
+          />
+        </View>
+
+        <ButtonPrimary
+          title={loading ? 'Signing in...' : 'Sign In'}
+          onPress={handleLogin}
+          disabled={loading}
+          iconName="log-in"
+        />
+
+        <View style={styles.actionsRow}>
+          <Pressable onPress={() => navigation.navigate('Register')}>
+            <AppText style={styles.link}>Create Account</AppText>
+          </Pressable>
+          <Pressable onPress={() => navigation.navigate('GoogleLogin')}>
+            <AppText style={styles.link}>Google Sign-in</AppText>
+          </Pressable>
+        </View>
+
+        <View style={styles.divider}>
+          <View style={styles.dividerLine} />
+          <AppText style={styles.dividerText}>or</AppText>
+          <View style={styles.dividerLine} />
+        </View>
+
+        <ButtonPrimary
+          title="Continue as Guest"
+          onPress={handleGuest}
+          variant="secondary"
+          iconName="person-outline"
+        />
+      </View>
     </View>
   );
 }
@@ -82,7 +108,25 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.background,
     paddingHorizontal: 24,
-    paddingTop: 64
+    paddingTop: 48
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 32,
+    marginTop: 20
+  },
+  appName: {
+    marginTop: 12,
+    ...theme.typography.headlineXL,
+    color: theme.colors.primary
+  },
+  tagline: {
+    marginTop: 4,
+    ...theme.typography.bodyMD,
+    color: theme.colors.onSurfaceVariant
+  },
+  formContainer: {
+    flex: 1
   },
   title: {
     ...theme.typography.headlineLG
@@ -91,32 +135,51 @@ const styles = StyleSheet.create({
     marginTop: 8,
     ...theme.typography.bodyMD,
     color: theme.colors.onSurfaceVariant,
-    marginBottom: 24
+    marginBottom: 32
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.colors.surfaceContainerLow,
+    borderRadius: theme.radius.lg,
+    marginBottom: 20,
+    borderWidth: 2,
+    borderColor: theme.colors.outlineVariant
+  },
+  inputIcon: {
+    paddingHorizontal: 16
   },
   input: {
-    borderRadius: theme.radius.lg,
-    backgroundColor: theme.colors.surfaceContainerLow,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    marginBottom: 16,
+    flex: 1,
+    paddingVertical: 18,
+    paddingRight: 16,
     color: theme.colors.onSurface,
     ...theme.typography.bodyMD
   },
   actionsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20
+    marginTop: 24,
+    paddingHorizontal: 16
   },
   link: {
     ...theme.typography.bodyMD,
-    color: theme.colors.primaryContainer
+    color: theme.colors.primary,
+    fontWeight: '600'
   },
-  guestButton: {
-    marginTop: 28,
-    alignItems: 'center'
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 28
   },
-  guestText: {
+  dividerLine: {
+    flex: 1,
+    height: 2,
+    backgroundColor: theme.colors.outlineVariant
+  },
+  dividerText: {
+    marginHorizontal: 16,
     ...theme.typography.bodyMD,
-    color: theme.colors.secondary
+    color: theme.colors.onSurfaceVariant
   }
 });

@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { View, StyleSheet, TextInput, Pressable } from 'react-native';
+import { View, StyleSheet, TextInput, Pressable, ScrollView } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { register } from '../../api/auth';
 import AppText from '../../components/AppText';
 import ButtonPrimary from '../../components/ButtonPrimary';
+import ScreenHeader from '../../components/ScreenHeader';
 import theme from '../../theme';
 
 export default function RegisterScreen({ navigation }) {
@@ -23,52 +25,93 @@ export default function RegisterScreen({ navigation }) {
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <Pressable onPress={() => navigation.goBack()}>
-        <AppText style={styles.link}>Back</AppText>
-      </Pressable>
-      <AppText style={styles.title}>Create account</AppText>
-      <AppText style={styles.subtitle}>Start your language journey</AppText>
+  const renderBackButton = () => (
+    <Pressable onPress={() => navigation.goBack()} style={styles.navButton}>
+      <Ionicons name="arrow-back" size={28} color={theme.colors.primary} />
+    </Pressable>
+  );
 
-      <TextInput
-        value={username}
-        onChangeText={setUsername}
-        placeholder="Username"
-        placeholderTextColor={theme.colors.onSurfaceVariant}
-        style={styles.input}
+  const renderHomeButton = () => (
+    <Pressable onPress={() => navigation.navigate('Home')} style={styles.navButton}>
+      <Ionicons name="home" size={28} color={theme.colors.primary} />
+    </Pressable>
+  );
+
+  return (
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      <ScreenHeader
+        title="Create Account"
+        left={renderBackButton()}
+        right={renderHomeButton()}
       />
-      <TextInput
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Email"
-        placeholderTextColor={theme.colors.onSurfaceVariant}
-        style={styles.input}
-      />
-      <TextInput
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Password"
-        placeholderTextColor={theme.colors.onSurfaceVariant}
-        secureTextEntry
-        style={styles.input}
-      />
+
+      <View style={styles.header}>
+        <Ionicons name="person-add" size={60} color={theme.colors.primary} />
+        <AppText style={styles.title}>Join S-Edu</AppText>
+        <AppText style={styles.subtitle}>Start your language learning journey</AppText>
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Ionicons name="person" size={24} color={theme.colors.onSurfaceVariant} style={styles.inputIcon} />
+        <TextInput
+          value={username}
+          onChangeText={setUsername}
+          placeholder="Username"
+          placeholderTextColor={theme.colors.onSurfaceVariant}
+          style={styles.input}
+        />
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Ionicons name="mail" size={24} color={theme.colors.onSurfaceVariant} style={styles.inputIcon} />
+        <TextInput
+          value={email}
+          onChangeText={setEmail}
+          placeholder="Email"
+          placeholderTextColor={theme.colors.onSurfaceVariant}
+          keyboardType="email-address"
+          style={styles.input}
+        />
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Ionicons name="lock-closed" size={24} color={theme.colors.onSurfaceVariant} style={styles.inputIcon} />
+        <TextInput
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Password"
+          placeholderTextColor={theme.colors.onSurfaceVariant}
+          secureTextEntry
+          style={styles.input}
+        />
+      </View>
 
       <ButtonPrimary
-        title={loading ? 'Creating...' : 'Create account'}
+        title={loading ? 'Creating...' : 'Create Account'}
         onPress={handleRegister}
         disabled={loading}
+        iconName="person-add"
       />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
-    paddingHorizontal: 24,
-    paddingTop: 48
+    backgroundColor: theme.colors.background
+  },
+  content: {
+    padding: 24,
+    paddingTop: 16
+  },
+  navButton: {
+    padding: 8
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 32,
+    marginTop: 20
   },
   title: {
     marginTop: 16,
@@ -78,19 +121,25 @@ const styles = StyleSheet.create({
     marginTop: 8,
     ...theme.typography.bodyMD,
     color: theme.colors.onSurfaceVariant,
-    marginBottom: 24
+    marginBottom: 16
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.colors.surfaceContainerLow,
+    borderRadius: theme.radius.lg,
+    marginBottom: 20,
+    borderWidth: 2,
+    borderColor: theme.colors.outlineVariant
+  },
+  inputIcon: {
+    paddingHorizontal: 16
   },
   input: {
-    borderRadius: theme.radius.lg,
-    backgroundColor: theme.colors.surfaceContainerLow,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    marginBottom: 16,
+    flex: 1,
+    paddingVertical: 18,
+    paddingRight: 16,
     color: theme.colors.onSurface,
     ...theme.typography.bodyMD
-  },
-  link: {
-    ...theme.typography.bodyMD,
-    color: theme.colors.primaryContainer
   }
 });
