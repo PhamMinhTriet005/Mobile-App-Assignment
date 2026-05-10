@@ -6,16 +6,14 @@ import AppText from '../../components/AppText';
 import ScreenHeader from '../../components/ScreenHeader';
 import Card from '../../components/Card';
 import theme from '../../theme';
-
-const LANGUAGE_ICONS = {
-  en: 'flag',
-  cn: 'flag',
-  jp: 'flag'
-};
+import useAuthStore from '../../state/authStore';
 
 export default function LanguageSelectScreen({ navigation }) {
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuthStore();
+
+  const greeting = user?.username ? `Welcome, ${user.username}!` : 'Welcome!';
 
   useEffect(() => {
     const load = async () => {
@@ -31,26 +29,12 @@ export default function LanguageSelectScreen({ navigation }) {
     load();
   }, []);
 
-  const renderBackButton = () => (
-    <Pressable onPress={() => navigation.goBack()} style={styles.navButton}>
-      <Ionicons name="arrow-back" size={28} color={theme.colors.primary} />
-    </Pressable>
-  );
-
-  const renderHomeButton = () => (
-    <Pressable onPress={() => navigation.navigate('Home')} style={styles.navButton}>
-      <Ionicons name="home" size={28} color={theme.colors.primary} />
-    </Pressable>
-  );
-
   return (
     <View style={styles.container}>
-      <ScreenHeader
-        title="Choose a Language"
-        subtitle="Select a language to start learning"
-        left={renderBackButton()}
-        right={renderHomeButton()}
-      />
+      <View style={styles.greetingContainer}>
+        <AppText style={styles.greeting}>{greeting}</AppText>
+        <AppText style={styles.greetingSubtitle}>Choose a language to start learning</AppText>
+      </View>
 
       {loading ? (
         <View style={styles.loadingContainer}>
@@ -97,8 +81,17 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
     padding: 24
   },
-  navButton: {
-    padding: 8
+  greetingContainer: {
+    marginBottom: 24,
+    marginTop: 16
+  },
+  greeting: {
+    ...theme.typography.headlineLG
+  },
+  greetingSubtitle: {
+    marginTop: 8,
+    ...theme.typography.bodyMD,
+    color: theme.colors.onSurfaceVariant
   },
   list: {
     paddingBottom: 24

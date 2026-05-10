@@ -1,13 +1,14 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useEffect } from 'react';
 import useAuthStore from '../state/authStore';
 import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import GuestScreen from '../screens/auth/GuestScreen';
 import GoogleLoginScreen from '../screens/auth/GoogleLoginScreen';
-import HomeScreen from '../screens/learning/HomeScreen';
 import LanguageSelectScreen from '../screens/learning/LanguageSelectScreen';
 import TopicListScreen from '../screens/learning/TopicListScreen';
+import TopicDetailScreen from '../screens/learning/TopicDetailScreen';
 import VocabularyListScreen from '../screens/learning/VocabularyListScreen';
 import VocabularyDetailScreen from '../screens/learning/VocabularyDetailScreen';
 import LessonScreen from '../screens/learning/LessonScreen';
@@ -18,12 +19,17 @@ const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
   const { token } = useAuthStore();
+  const navigationRef = useNavigationContainerRef();
+
+  useEffect(() => {
+    useAuthStore.getState().setNavigateRef(navigationRef);
+  }, [navigationRef]);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
-        initialRouteName={token ? 'Home' : 'Login'}
+        initialRouteName={token ? 'Languages' : 'Login'}
       >
         {!token ? (
           <>
@@ -33,9 +39,9 @@ export default function AppNavigator() {
             <Stack.Screen name="GoogleLogin" component={GoogleLoginScreen} />
           </>
         ) : null}
-        <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Languages" component={LanguageSelectScreen} />
         <Stack.Screen name="Topics" component={TopicListScreen} />
+        <Stack.Screen name="TopicDetail" component={TopicDetailScreen} />
         <Stack.Screen name="VocabularyList" component={VocabularyListScreen} />
         <Stack.Screen name="VocabularyDetail" component={VocabularyDetailScreen} />
         <Stack.Screen name="Lesson" component={LessonScreen} />

@@ -8,7 +8,7 @@ import theme from '../../theme';
 import { getVocabulariesByTopic } from '../../api/learning';
 
 export default function LessonScreen({ route, navigation }) {
-  const { topic } = route.params || {};
+  const { topic, language } = route.params || {};
   const [vocabularies, setVocabularies] = useState([]);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -34,7 +34,7 @@ export default function LessonScreen({ route, navigation }) {
 
   const handleNext = () => {
     if (index + 1 >= vocabularies.length) {
-      navigation.navigate('Quiz', { topicId: topic?.id });
+      navigation.navigate('TopicDetail', { topic, language });
     } else {
       setIndex((prev) => prev + 1);
     }
@@ -116,9 +116,9 @@ export default function LessonScreen({ route, navigation }) {
       </View>
 
       <ButtonPrimary
-        title={index + 1 >= vocabularies.length ? 'Take Quiz' : 'Next Word'}
+        title={index + 1 >= vocabularies.length ? 'Done' : 'Next Word'}
         onPress={handleNext}
-        iconName={index + 1 >= vocabularies.length ? 'help-circle' : 'arrow-forward'}
+        iconName={index + 1 >= vocabularies.length ? 'checkmark-circle' : 'arrow-forward'}
       />
     </ScrollView>
   );

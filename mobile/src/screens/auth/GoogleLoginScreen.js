@@ -18,6 +18,10 @@ export default function GoogleLoginScreen({ navigation }) {
     try {
       const data = await loginWithGoogle({ idToken });
       await setSession(data);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Languages' }],
+      });
     } catch (error) {
       setLoading(false);
       alert(error.message || 'Google login failed');

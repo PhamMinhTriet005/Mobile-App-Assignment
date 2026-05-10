@@ -18,6 +18,10 @@ export default function LoginScreen({ navigation }) {
     try {
       const data = await login({ username, password });
       await setSession(data);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Languages' }],
+      });
     } catch (error) {
       setLoading(false);
       alert(error.message || 'Login failed');
@@ -29,6 +33,10 @@ export default function LoginScreen({ navigation }) {
     try {
       const data = await loginAsGuest();
       await setSession(data);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Languages' }],
+      });
     } catch (error) {
       setLoading(false);
       alert(error.message || 'Guest login failed');

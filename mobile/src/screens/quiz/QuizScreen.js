@@ -10,7 +10,7 @@ import theme from '../../theme';
 import { generateTest } from '../../api/quiz';
 
 export default function QuizScreen({ route, navigation }) {
-  const { topicId } = route.params || {};
+  const { topicId, topic, language } = route.params || {};
   const [questions, setQuestions] = useState([]);
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -48,7 +48,7 @@ export default function QuizScreen({ route, navigation }) {
 
   const handleNext = () => {
     if (index + 1 >= questions.length) {
-      navigation.navigate('QuizResult', { questions, answers, topicId });
+      navigation.navigate('QuizResult', { questions, answers, topicId, topic, language });
     } else {
       setIndex((prev) => prev + 1);
     }
@@ -63,7 +63,10 @@ export default function QuizScreen({ route, navigation }) {
   );
 
   const renderHomeButton = () => (
-    <Pressable onPress={() => navigation.navigate('Home')} style={styles.navButton}>
+    <Pressable 
+      onPress={() => navigation.navigate(language ? 'Topics' : 'Languages', language ? { language } : undefined)} 
+      style={styles.navButton}
+    >
       <Ionicons name="home" size={28} color={theme.colors.primary} />
     </Pressable>
   );

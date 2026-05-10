@@ -7,7 +7,7 @@ import ScreenHeader from '../../components/ScreenHeader';
 import theme from '../../theme';
 
 export default function VocabularyDetailScreen({ route, navigation }) {
-  const { vocab } = route.params || {};
+  const { vocab, language } = route.params || {};
 
   const renderBackButton = () => (
     <Pressable onPress={() => navigation.goBack()} style={styles.navButton}>
@@ -16,7 +16,7 @@ export default function VocabularyDetailScreen({ route, navigation }) {
   );
 
   const renderHomeButton = () => (
-    <Pressable onPress={() => navigation.navigate('Home')} style={styles.navButton}>
+    <Pressable onPress={() => navigation.navigate('Topics', { language })} style={styles.navButton}>
       <Ionicons name="home" size={28} color={theme.colors.primary} />
     </Pressable>
   );
@@ -64,7 +64,7 @@ export default function VocabularyDetailScreen({ route, navigation }) {
 
       <ButtonPrimary
         title="Practice This Word"
-        onPress={() => navigation.navigate('Quiz', { topicId: vocab?.topicId })}
+        onPress={() => navigation.navigate('Quiz', { topicId: vocab?.topicId, topic: vocab, language })}
         iconName="fitness"
       />
     </ScrollView>

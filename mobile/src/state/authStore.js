@@ -5,6 +5,8 @@ import * as SecureStore from 'expo-secure-store';
 const USER_KEY = 'sedu-user';
 const TOKEN_KEY = 'sedu-token';
 
+let navigateRef = null;
+
 const useAuthStore = create((set) => ({
   user: null,
   token: null,
@@ -27,6 +29,17 @@ const useAuthStore = create((set) => ({
     const userRaw = await AsyncStorage.getItem(USER_KEY);
     const user = userRaw ? JSON.parse(userRaw) : null;
     set({ user, token, initializing: false });
+  },
+  setNavigateRef: (nav) => {
+    navigateRef = nav;
+  },
+  logout: async () => {
+    await SecureStore.deleteItemAsync(TOKEN_KEY);
+    await AsyncStorage.removeItem(USER_KEY);
+    set({ user: null, token: null });
+    if (navigateRef) {
+      navigateRef.reset({ index: 0, routes: [{ name: 'Login' }] });
+    }
   }
 }));
 

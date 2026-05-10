@@ -10,7 +10,7 @@ import { submitTestResult } from '../../api/quiz';
 import useAuthStore from '../../state/authStore';
 
 export default function QuizResultScreen({ route, navigation }) {
-  const { questions, answers, topicId } = route.params || {};
+  const { questions, answers, topicId, topic, language } = route.params || {};
   const { user } = useAuthStore();
 
   const result = useMemo(() => {
@@ -59,7 +59,10 @@ export default function QuizResultScreen({ route, navigation }) {
   );
 
   const renderHomeButton = () => (
-    <Pressable onPress={() => navigation.navigate('Home')} style={styles.navButton}>
+    <Pressable 
+      onPress={() => navigation.navigate('TopicDetail', { topic, language })} 
+      style={styles.navButton}
+    >
       <Ionicons name="home" size={28} color={theme.colors.primary} />
     </Pressable>
   );
@@ -118,16 +121,17 @@ export default function QuizResultScreen({ route, navigation }) {
           title="Try Again" 
           onPress={() => navigation.navigate('Quiz', { 
             topicId: topicId,
-            resetKey: Date.now()
+            resetKey: Date.now(),
+            language
           })} 
           iconName="refresh"
         />
         <Pressable 
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => navigation.navigate('TopicDetail', { topic, language })}
           style={styles.homeButton}
         >
-          <Ionicons name="home" size={24} color={theme.colors.primary} />
-          <AppText style={styles.homeText}>Back to Home</AppText>
+          <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
+          <AppText style={styles.homeText}>Done</AppText>
         </Pressable>
       </View>
     </ScrollView>

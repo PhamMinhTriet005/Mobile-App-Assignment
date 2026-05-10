@@ -3,8 +3,8 @@ import { View, StyleSheet, FlatList, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getTopicsByLanguage } from '../../api/learning';
 import AppText from '../../components/AppText';
-import ScreenHeader from '../../components/ScreenHeader';
 import Card from '../../components/Card';
+import ScreenHeader from '../../components/ScreenHeader';
 import theme from '../../theme';
 
 export default function TopicListScreen({ route, navigation }) {
@@ -29,14 +29,8 @@ export default function TopicListScreen({ route, navigation }) {
   }, [language]);
 
   const renderBackButton = () => (
-    <Pressable onPress={() => navigation.goBack()} style={styles.navButton}>
+    <Pressable onPress={() => navigation.navigate('Languages')} style={styles.navButton}>
       <Ionicons name="arrow-back" size={28} color={theme.colors.primary} />
-    </Pressable>
-  );
-
-  const renderHomeButton = () => (
-    <Pressable onPress={() => navigation.navigate('Home')} style={styles.navButton}>
-      <Ionicons name="home" size={28} color={theme.colors.primary} />
     </Pressable>
   );
 
@@ -44,9 +38,8 @@ export default function TopicListScreen({ route, navigation }) {
     <View style={styles.container}>
       <ScreenHeader
         title={language?.name || 'Topics'}
-        subtitle={language ? `Learn ${language.name}` : 'Choose a topic'}
+        subtitle="Choose a topic to start"
         left={renderBackButton()}
-        right={renderHomeButton()}
       />
 
       {loading ? (
@@ -69,7 +62,7 @@ export default function TopicListScreen({ route, navigation }) {
             const accentColor = colors[index % colors.length];
             return (
               <Pressable
-                onPress={() => navigation.navigate('VocabularyList', { topic: item })}
+                onPress={() => navigation.navigate('TopicDetail', { topic: item, language })}
               >
                 <Card style={styles.topicCard} accentColor={accentColor}>
                   <View style={styles.topicContent}>
@@ -78,7 +71,7 @@ export default function TopicListScreen({ route, navigation }) {
                     </View>
                     <View style={styles.topicText}>
                       <AppText style={styles.topicTitle}>{item.name}</AppText>
-                      <AppText style={styles.topicSubtitle}>Tap to start learning</AppText>
+                      <AppText style={styles.topicSubtitle}>Tap to continue</AppText>
                     </View>
                     <Ionicons name="chevron-forward" size={28} color={theme.colors.onSurfaceVariant} />
                   </View>
@@ -102,6 +95,7 @@ const styles = StyleSheet.create({
     padding: 8
   },
   list: {
+    paddingTop: 16,
     paddingBottom: 24
   },
   loadingContainer: {

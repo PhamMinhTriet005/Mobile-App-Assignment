@@ -9,7 +9,7 @@ import ButtonPrimary from '../../components/ButtonPrimary';
 import theme from '../../theme';
 
 export default function VocabularyListScreen({ route, navigation }) {
-  const { topic } = route.params || {};
+  const { topic, language } = route.params || {};
   const [vocabularies, setVocabularies] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -36,7 +36,7 @@ export default function VocabularyListScreen({ route, navigation }) {
   );
 
   const renderHomeButton = () => (
-    <Pressable onPress={() => navigation.navigate('Home')} style={styles.navButton}>
+    <Pressable onPress={() => navigation.navigate('Topics', { language })} style={styles.navButton}>
       <Ionicons name="home" size={28} color={theme.colors.primary} />
     </Pressable>
   );
@@ -78,7 +78,7 @@ export default function VocabularyListScreen({ route, navigation }) {
               </View>
               <ButtonPrimary
                 title="Start Learning"
-                onPress={() => navigation.navigate('Lesson', { topic })}
+                onPress={() => navigation.navigate('Lesson', { topic, language })}
                 iconName="play"
               />
             </Card>
@@ -88,7 +88,7 @@ export default function VocabularyListScreen({ route, navigation }) {
             const accentColor = colors[index % colors.length];
             return (
               <Pressable
-                onPress={() => navigation.navigate('VocabularyDetail', { vocab: item })}
+                onPress={() => navigation.navigate('VocabularyDetail', { vocab: item, language })}
               >
                 <Card style={styles.vocabCard} accentColor={accentColor}>
                   <View style={styles.vocabRow}>
