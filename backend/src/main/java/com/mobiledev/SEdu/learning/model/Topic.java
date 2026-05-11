@@ -10,6 +10,10 @@ public class Topic {
     private String id;
     private String languageId;
     private String name;
+<<<<<<< HEAD
+=======
+    @JsonProperty("isPremium")
+>>>>>>> upstream/test_UI
     private boolean isPremium;
 
     public Topic() {}
@@ -22,7 +26,13 @@ public class Topic {
     public void setLanguageId(String languageId) { this.languageId = languageId; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+<<<<<<< HEAD
     @JsonProperty("isPremium")
     public boolean isPremium() { return isPremium; }
     public void setPremium(boolean premium) { isPremium = premium; }
 }
+=======
+    public boolean isPremium() { return isPremium; }
+    public void setPremium(boolean premium) { isPremium = premium; }
+}
+>>>>>>> upstream/test_UI
