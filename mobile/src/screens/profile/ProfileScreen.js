@@ -32,8 +32,13 @@ export default function ProfileScreen({ navigation }) {
     navigation.navigate('Subscription');
   };
 
+<<<<<<< HEAD
   const isPremium = subscription?.plan && subscription.plan !== 'FREE';
   const planName = subscription?.plan?.displayName || 'Free Plan';
+=======
+  const isPremium = subscription && subscription.active === true;
+  const planName = subscription?.plan || 'Free Plan';
+>>>>>>> upstream/test_UI
   const endDate = subscription?.endDate 
     ? new Date(subscription.endDate).toLocaleDateString('en-US', { 
         year: 'numeric', 

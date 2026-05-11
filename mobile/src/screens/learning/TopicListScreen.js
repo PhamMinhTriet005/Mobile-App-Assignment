@@ -31,10 +31,17 @@ export default function TopicListScreen({ route, navigation }) {
   }, [language]);
 
   const { subscription } = useAuthStore();
+<<<<<<< HEAD
   const isPremiumUser = subscription?.plan && subscription.plan !== 'FREE';
 
   const handleTopicPress = (topic) => {
     if (topic.isPremium && !isPremiumUser) {
+=======
+  const isPremiumUser = subscription && subscription.active === true;
+
+  const handleTopicPress = (topic) => {
+    if (topic.isPremium === true && !isPremiumUser) {
+>>>>>>> upstream/test_UI
       Alert.alert(
         'Premium Content',
         'This is a premium topic. Upgrade to Premium to access this content.',
@@ -105,7 +112,11 @@ export default function TopicListScreen({ route, navigation }) {
           renderItem={({ item, index }) => {
             const colors = [theme.colors.primary, theme.colors.secondary, theme.colors.tertiary, theme.colors.accent];
             const accentColor = colors[index % colors.length];
+<<<<<<< HEAD
             const isLocked = item.isPremium && !isPremiumUser;
+=======
+            const isLocked = (item.isPremium === true) && !isPremiumUser;
+>>>>>>> upstream/test_UI
             return (
               <Pressable
                 onPress={() => handleTopicPress(item)}

@@ -127,8 +127,13 @@ export default function SubscriptionScreen({ navigation }) {
       <AppText style={styles.subtitle}>Choose the plan that works for you</AppText>
       
       {plans.map((plan, index) => {
+<<<<<<< HEAD
         const isActive = subscription?.plan?.name === plan.name;
         const isPremium = plan.name !== 'FREE';
+=======
+        const isActive = subscription?.plan === plan.name;
+        const isPremium = plan.name === 'PREMIUM_MONTHLY' || plan.name === 'PREMIUM_YEARLY';
+>>>>>>> upstream/test_UI
         
         return (
           <Card 
