@@ -1,3 +1,7 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
 # Root - IDE and OS files
 .DS_Store
 .idea
@@ -12,7 +16,6 @@ target/
 backend-logs.txt
 
 # Frontend (React Native/Expo)
-mobile/node_modules/
 mobile/.expo/
 mobile/.expo-shared/
 mobile/dist/
@@ -20,4 +23,4 @@ mobile/web-build/
 
 # Environments
 .env
-.env.*
+.env.*

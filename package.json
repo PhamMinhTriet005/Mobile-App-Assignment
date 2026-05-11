@@ -1,0 +1,17 @@
+{
+  "name": "s-edu-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "concurrently \"npm run backend\" \"npm run website\" \"npm run mobile\"",
+    "start:docker": "concurrently \"npm run backend:docker\" \"npm run website\" \"npm run mobile\"",
+    "backend": "cd backend && dotenv -e .env -- mvnw spring-boot:run",
+    "backend:docker": "cd backend && dotenv -e .env -- docker compose up --build",
+    "website": "cd website && npm run dev",
+    "mobile": "cd mobile && dotenv -e .env -- npx expo start"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "dotenv-cli": "^11.0.0"
+  }
+}
