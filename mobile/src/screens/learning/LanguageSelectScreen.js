@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getLanguages } from '../../api/learning';
-import { logout as logoutApi } from '../../api/auth';
 import AppText from '../../components/AppText';
 import ScreenHeader from '../../components/ScreenHeader';
 import Card from '../../components/Card';
@@ -12,7 +11,9 @@ import useAuthStore from '../../state/authStore';
 export default function LanguageSelectScreen({ navigation }) {
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user, logout } = useAuthStore();
+  const { user } = useAuthStore();
+
+  const greeting = user?.username ? `Welcome, ${user.username}!` : 'Welcome!';
 
   useEffect(() => {
     const load = async () => {
@@ -28,31 +29,23 @@ export default function LanguageSelectScreen({ navigation }) {
     load();
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await logoutApi();
-    } catch (error) {
-      // Ignore API errors
-    }
-    // Clear local session
-    const authStore = useAuthStore.getState();
-    await authStore.clearSession();
-    // Navigate to Login using screen's navigation prop
-    navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+  const handleProfile = () => {
+    navigation.navigate('Profile');
   };
 
-  const renderLogoutButton = () => (
-    <Pressable onPress={handleLogout} style={styles.navButton}>
-      <Ionicons name="log-out-outline" size={28} color={theme.colors.primary} />
+  const renderProfileButton = () => (
+    <Pressable onPress={handleProfile} style={styles.navButton}>
+      <Ionicons name="person-outline" size={28} color={theme.colors.primary} />
     </Pressable>
   );
 
   return (
     <View style={styles.container}>
-      <View style={styles.greetingContainer}>
-        <AppText style={styles.greeting}>{greeting}</AppText>
-        <AppText style={styles.greetingSubtitle}>Choose a language to start learning</AppText>
-      </View>
+      <ScreenHeader
+        title={greeting}
+        subtitle="Choose a language to start learning"
+        right={renderProfileButton()}
+      />
 
       {loading ? (
         <View style={styles.loadingContainer}>
@@ -99,17 +92,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
     padding: 24
   },
-  greetingContainer: {
-    marginBottom: 24,
-    marginTop: 16
-  },
-  greeting: {
-    ...theme.typography.headlineLG
-  },
-  greetingSubtitle: {
-    marginTop: 8,
-    ...theme.typography.bodyMD,
-    color: theme.colors.onSurfaceVariant
+  navButton: {
+    padding: 8
   },
   list: {
     paddingTop: 16,

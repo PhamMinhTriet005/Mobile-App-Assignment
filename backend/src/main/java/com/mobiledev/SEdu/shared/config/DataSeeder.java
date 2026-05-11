@@ -52,6 +52,7 @@ public class DataSeeder implements CommandLineRunner {
         System.out.println("====== STARTING DATA SEEDER ======");
         seedSafely(this::seedBaseCatalog, "base catalog");
         seedSafely(this::seedExtraEnglishPremiumTopics, "extra premium English topics");
+        seedSafely(this::seedJapaneseFreeTopics, "free Japanese topics");
         seedSafely(this::seedDemoUsersAndSubscriptions, "demo users and subscriptions");
     }
 
@@ -195,6 +196,58 @@ public class DataSeeder implements CommandLineRunner {
             );
             }
 
+    private void seedJapaneseFreeTopics() {
+            Optional<Language> japanese = languageRepository.findByCode("jp");
+            if (japanese.isEmpty()) {
+                return;
+            }
+
+            Language jp = japanese.get();
+
+            ensureFreeTopic(
+                jp,
+                "Greetings (あいさつ)",
+                new String[][] {
+                    {"Konnichiwa", "Xin chào", "v", null},
+                    {"Ohayou", "Chào buổi sáng", "v", null},
+                    {"Konbanwa", "Chào buổi tối", "v", null},
+                    {"Arigatou", "Cảm ơn", "v", null}
+                },
+                "Which phrase means 'thank you' in Japanese?",
+                List.of("Ohayou", "Arigatou", "Konbanwa", "Sayonara"),
+                1
+            );
+
+            ensureFreeTopic(
+                jp,
+                "Numbers (数字)",
+                new String[][] {
+                    {"Ichi", "Một", "n", null},
+                    {"Ni", "Hai", "n", null},
+                    {"San", "Ba", "n", null},
+                    {"Yon", "Bốn", "n", null},
+                    {"Go", "Năm", "n", null}
+                },
+                "Which word means 'two' in Japanese?",
+                List.of("Ichi", "Ni", "San", "Go"),
+                1
+            );
+
+            ensureFreeTopic(
+                jp,
+                "Family (家族)",
+                new String[][] {
+                    {"Haha", "Mẹ", "n", null},
+                    {"Chichi", "Bố", "n", null},
+                    {"Ani", "Anh trai", "n", null},
+                    {"Imouto", "Em gái", "n", null}
+                },
+                "Which word means 'father' in Japanese?",
+                List.of("Haha", "Chichi", "Ani", "Imouto"),
+                1
+            );
+    }
+
     private void seedDemoUsersAndSubscriptions() {
             ensureUser("admin", "admin@sedu.com", Role.ADMIN);
             ensureUser("normaluser", "normaluser@sedu.com", Role.USER);
@@ -242,6 +295,26 @@ public class DataSeeder implements CommandLineRunner {
     private void ensurePremiumTopic(Language language, String topicName, String[][] vocabularySeeds, String questionContent, List<String> questionOptions, int correctOptionIndex) {
             Topic topic = topicRepository.findByLanguageIdAndName(language.getId(), topicName)
                 .orElseGet(() -> topicRepository.save(new Topic(language.getId(), topicName, true)));
+
+            for (String[] seed : vocabularySeeds) {
+                String word = seed[0];
+                boolean exists = vocabularyRepository.findByTopicId(topic.getId()).stream()
+                    .anyMatch(vocabulary -> vocabulary.getWord().equalsIgnoreCase(word));
+                if (!exists) {
+                vocabularyRepository.save(new Vocabulary(topic.getId(), word, seed[1], seed[2], seed[3], null));
+                }
+            }
+
+            boolean questionExists = questionRepository.findByTopicId(topic.getId()).stream()
+                .anyMatch(existing -> existing.getContent().equalsIgnoreCase(questionContent));
+            if (!questionExists) {
+                questionRepository.save(new Question(topic.getId(), questionContent, questionOptions, correctOptionIndex, null));
+            }
+    }
+
+    private void ensureFreeTopic(Language language, String topicName, String[][] vocabularySeeds, String questionContent, List<String> questionOptions, int correctOptionIndex) {
+            Topic topic = topicRepository.findByLanguageIdAndName(language.getId(), topicName)
+                .orElseGet(() -> topicRepository.save(new Topic(language.getId(), topicName, false)));
 
             for (String[] seed : vocabularySeeds) {
                 String word = seed[0];

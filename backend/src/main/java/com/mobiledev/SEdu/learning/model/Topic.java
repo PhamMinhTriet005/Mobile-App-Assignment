@@ -1,5 +1,6 @@
 package com.mobiledev.SEdu.learning.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -21,6 +22,7 @@ public class Topic {
     public void setLanguageId(String languageId) { this.languageId = languageId; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+    @JsonProperty("isPremium")
     public boolean isPremium() { return isPremium; }
     public void setPremium(boolean premium) { isPremium = premium; }
 }

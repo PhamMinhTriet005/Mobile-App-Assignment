@@ -47,6 +47,8 @@ function ContentManagement() {
   const [error, setError] = useState('');
   // Demo: Default to Free user. In production, get this from auth context/token
   const userPlan = 'Free';
+  const userRole = 'ADMIN';
+  const canBypassPremiumLocks = userRole === 'ADMIN';
 
   useEffect(() => {
     let cancelled = false;
@@ -145,7 +147,7 @@ function ContentManagement() {
 
   const selectedItem = filteredItems.find((item) => item.id === selectedId) ?? filteredItems[0];
   const selectedTopic = category === 'Topic' ? topics.find((t) => t.id === selectedId) : undefined;
-  const isPremiumContentAccessDenied = selectedTopic && selectedTopic.isPremium && userPlan === 'Free';
+  const isPremiumContentAccessDenied = selectedTopic && selectedTopic.isPremium && !canBypassPremiumLocks && userPlan === 'Free';
 
   useEffect(() => {
     if (!selectedItem) {
@@ -256,7 +258,7 @@ function ContentManagement() {
             <div className="item-list">
               {filteredItems.map((item) => {
                 const topicData = category === 'Topic' ? topics.find((t) => t.id === item.id) : undefined;
-                const isLocked = topicData?.isPremium && userPlan === 'Free';
+                const isLocked = topicData?.isPremium && !canBypassPremiumLocks && userPlan === 'Free';
                 return (
                   <button
                     key={item.id}
