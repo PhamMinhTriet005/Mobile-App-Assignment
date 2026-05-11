@@ -48,11 +48,11 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.logoContainer}>
         <Ionicons name="school" size={80} color={theme.colors.primary} />
         <AppText style={styles.appName}>S-Edu</AppText>
-        <AppText style={styles.tagline}>Language Learning for Everyone</AppText>
+        {/* <AppText style={styles.tagline}>Language Learning for Everyone</AppText> */}
       </View>
 
       <View style={styles.formContainer}>
-        <AppText style={styles.title}>Welcome Back!</AppText>
+        {/* <AppText style={styles.title}>Welcome Back!</AppText> */}
         <AppText style={styles.subtitle}>Sign in to continue your learning journey</AppText>
 
         <View style={styles.inputContainer}>
@@ -89,16 +89,21 @@ export default function LoginScreen({ navigation }) {
           <Pressable onPress={() => navigation.navigate('Register')}>
             <AppText style={styles.link}>Create Account</AppText>
           </Pressable>
-          <Pressable onPress={() => navigation.navigate('GoogleLogin')}>
-            <AppText style={styles.link}>Google Sign-in</AppText>
-          </Pressable>
         </View>
 
+      
         <View style={styles.divider}>
           <View style={styles.dividerLine} />
           <AppText style={styles.dividerText}>or</AppText>
           <View style={styles.dividerLine} />
         </View>
+
+        <ButtonPrimary
+          title="Continue with Google"
+          onPress={() => navigation.navigate('GoogleLogin')}
+          style={styles.googleButton}
+          iconName="logo-google"
+        />
 
         <ButtonPrimary
           title="Continue as Guest"
@@ -166,9 +171,12 @@ const styles = StyleSheet.create({
   },
   actionsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 24,
-    paddingHorizontal: 16
+    justifyContent: 'center',
+    marginTop: 24
+  },
+  googleButton: {
+    backgroundColor: '#DB4437',
+    marginBottom: 16
   },
   link: {
     ...theme.typography.bodyMD,
