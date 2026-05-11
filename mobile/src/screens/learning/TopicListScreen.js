@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getTopicsByLanguage } from '../../api/learning';
+import { logout as logoutApi } from '../../api/auth';
 import AppText from '../../components/AppText';
 import Card from '../../components/Card';
 import ScreenHeader from '../../components/ScreenHeader';
 import theme from '../../theme';
+import useAuthStore from '../../state/authStore';
 
 export default function TopicListScreen({ route, navigation }) {
   const { language } = route.params || {};
@@ -34,12 +36,32 @@ export default function TopicListScreen({ route, navigation }) {
     </Pressable>
   );
 
+  const handleLogout = async () => {
+    try {
+      await logoutApi();
+    } catch (error) {
+      // Ignore API errors
+    }
+    // Clear local session
+    const authStore = useAuthStore.getState();
+    await authStore.clearSession();
+    // Navigate to Login using screen's navigation prop
+    navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+  };
+
+  const renderLogoutButton = () => (
+    <Pressable onPress={handleLogout} style={styles.navButton}>
+      <Ionicons name="log-out-outline" size={28} color={theme.colors.primary} />
+    </Pressable>
+  );
+
   return (
     <View style={styles.container}>
       <ScreenHeader
         title={language?.name || 'Topics'}
         subtitle="Choose a topic to start"
         left={renderBackButton()}
+        right={renderLogoutButton()}
       />
 
       {loading ? (

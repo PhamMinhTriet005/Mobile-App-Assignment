@@ -15,3 +15,7 @@ export function loginWithGoogle(payload) {
 export function loginAsGuest() {
   return unwrap(api.post('/api/v1/auth/guest'));
 }
+
+export function logout() {
+  return unwrap(api.post('/api/v1/auth/logout'));
+}
