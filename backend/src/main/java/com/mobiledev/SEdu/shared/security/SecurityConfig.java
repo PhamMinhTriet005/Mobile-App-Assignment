@@ -18,6 +18,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import org.springframework.http.HttpMethod;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -74,7 +76,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/logout").authenticated()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/api/health").permitAll()
-                        .requestMatchers("/api/v1/subscriptions/plans").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/languages/**", "/api/topics/**", "/api/vocabularies/**", "/api/questions/**", "/api/admin/**", "/api/v1/subscriptions/plans").permitAll()
                         .anyRequest().authenticated()
                 );
 
